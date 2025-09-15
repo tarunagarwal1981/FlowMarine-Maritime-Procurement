@@ -5,7 +5,7 @@ import {
   Filter, 
   Eye, 
   Download,
-  Compare,
+  GitCompare,
   CheckCircle,
   XCircle,
   Clock,
@@ -291,7 +291,7 @@ export const QuotesPage: React.FC = () => {
             </Button>
             {selectedQuotes.length > 0 && (
               <Button variant="outline" className="flex items-center space-x-2">
-                <Compare className="h-4 w-4" />
+                <GitCompare className="h-4 w-4" />
                 <span>Compare ({selectedQuotes.length})</span>
               </Button>
             )}
