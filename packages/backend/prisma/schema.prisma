@@ -1,0 +1,1462 @@
+// FlowMarine Database Schema
+// Comprehensive maritime procurement workflow platform
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// ENUMS
+// ============================================================================
+
+enum UserRole {
+  VESSEL_CREW
+  CHIEF_ENGINEER
+  CAPTAIN
+  SUPERINTENDENT
+  PROCUREMENT_MANAGER
+  FINANCE_TEAM
+  ADMIN
+}
+
+enum UrgencyLevel {
+  ROUTINE
+  URGENT
+  EMERGENCY
+}
+
+enum RequisitionStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  CANCELLED
+  CONVERTED_TO_RFQ
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  DELEGATED
+}
+
+enum ComplianceAlertType {
+  CERTIFICATE_EXPIRY
+  SAFETY_VIOLATION
+  ENVIRONMENTAL_BREACH
+  DOCUMENTATION_MISSING
+}
+
+enum ComplianceAlertSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum ItemCategory {
+  ENGINE_PARTS
+  DECK_EQUIPMENT
+  SAFETY_GEAR
+  NAVIGATION
+  CATERING
+  MAINTENANCE
+  ELECTRICAL
+  PLUMBING
+  HVAC
+  COMMUNICATION
+}
+
+enum CriticalityLevel {
+  SAFETY_CRITICAL
+  OPERATIONAL_CRITICAL
+  ROUTINE
+}
+
+enum RFQStatus {
+  DRAFT
+  SENT
+  RESPONSES_RECEIVED
+  EVALUATED
+  AWARDED
+  CANCELLED
+}
+
+enum QuoteStatus {
+  PENDING
+  SUBMITTED
+  ACCEPTED
+  REJECTED
+  EXPIRED
+}
+
+enum POStatus {
+  DRAFT
+  SENT
+  ACKNOWLEDGED
+  IN_PROGRESS
+  DELIVERED
+  INVOICED
+  PAID
+  CANCELLED
+}
+
+enum DeliveryStatus {
+  SCHEDULED
+  IN_TRANSIT
+  DELIVERED
+  DELAYED
+  CANCELLED
+}
+
+enum InvoiceStatus {
+  RECEIVED
+  UNDER_REVIEW
+  APPROVED
+  PAID
+  DISPUTED
+  REJECTED
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  APPROVE
+  REJECT
+  EMERGENCY_OVERRIDE
+  DELEGATE
+  SECURITY_EVENT
+}
+
+// ============================================================================
+// USER MANAGEMENT AND AUTHENTICATION
+// ============================================================================
+
+model User {
+  id                    String    @id @default(cuid())
+  email                 String    @unique
+  passwordHash          String
+  firstName             String
+  lastName              String
+  role                  UserRole
+  isActive              Boolean   @default(true)
+  emailVerified         Boolean   @default(false)
+  emailVerificationToken String?
+  passwordResetToken    String?
+  passwordResetExpiry   DateTime?
+  lastLogin             DateTime?
+  failedLoginAttempts   Int       @default(0)
+  accountLockedUntil    DateTime?
+  
+  // Relationships
+  vessels               VesselAssignment[]
+  permissions           UserPermission[]
+  requisitions          Requisition[]
+  approvals             Approval[]
+  auditLogs             AuditLog[]
+  refreshTokens         RefreshToken[]
+  delegationsGiven      Delegation[] @relation("DelegatorUser")
+  delegationsReceived   Delegation[] @relation("DelegateUser")
+  emergencyOverrides    EmergencyOverride[]
+  emergencyApprovals    EmergencyOverride[] @relation("EmergencyApprover")
+  complianceAlertsResolved ComplianceAlert[] @relation("ComplianceAlertResolver")
+  complianceReportsGenerated ComplianceReport[] @relation("ComplianceReportGenerator")
+  securityIncidents     SecurityIncident[]
+  securityIncidentsResolved SecurityIncident[] @relation("SecurityIncidentResolver")
+  securityAlertsAcknowledged SecurityAlert[]
+  legalHoldsPlaced      LegalHold[] @relation("LegalHoldPlacer")
+  legalHoldsRemoved     LegalHold[] @relation("LegalHoldRemover")
+  documentVersionsCreated DocumentVersion[] @relation("DocumentVersionCreator")
+  documentChangeLogs    DocumentChangeLog[] @relation("DocumentChangeLogChanger")
+  complianceFlagsResolved ComplianceFlag[] @relation("ComplianceFlagResolver")
+  transactionHistory    TransactionHistory[] @relation("TransactionHistoryUser")
+  complianceAuditTrails ComplianceAuditTrail[] @relation("ComplianceAuditTrailUser")
+  complianceAuditTrailsReviewed ComplianceAuditTrail[] @relation("ComplianceAuditTrailReviewer")
+  
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  
+  @@map("users")
+  @@index([email])
+  @@index([role])
+  @@index([isActive])
+}
+
+model Permission {
+  id          String @id @default(cuid())
+  name        String @unique
+  description String
+  category    String
+  
+  // Relationships
+  users       UserPermission[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("permissions")
+  @@index([category])
+}
+
+model UserPermission {
+  id           String @id @default(cuid())
+  userId       String
+  permissionId String
+  
+  // Relationships
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  
+  createdAt    DateTime @default(now())
+  
+  @@unique([userId, permissionId])
+  @@map("user_permissions")
+  @@index([userId])
+  @@index([permissionId])
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  isRevoked Boolean  @default(false)
+  revokedAt DateTime?
+  ipAddress String?
+  deviceInfo Json?
+  lastUsed  DateTime @default(now())
+  
+  // Relationships
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  
+  @@map("refresh_tokens")
+  @@index([userId])
+  @@index([expiresAt])
+  @@index([isRevoked])
+}
+
+model Delegation {
+  id          String    @id @default(cuid())
+  delegatorId String
+  delegateId  String
+  vesselId    String?
+  permissions String[]  // Array of permission names
+  reason      String
+  startDate   DateTime
+  endDate     DateTime
+  isActive    Boolean   @default(true)
+  
+  // Relationships
+  delegator   User      @relation("DelegatorUser", fields: [delegatorId], references: [id])
+  delegate    User      @relation("DelegateUser", fields: [delegateId], references: [id])
+  vessel      Vessel?   @relation(fields: [vesselId], references: [id])
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  @@map("delegations")
+  @@index([delegatorId])
+  @@index([delegateId])
+  @@index([vesselId])
+  @@index([startDate, endDate])
+}
+
+model EmergencyOverride {
+  id                    String    @id @default(cuid())
+  userId                String
+  vesselId              String
+  reason                String
+  approvedBy            String?
+  approvedAt            DateTime?
+  postApprovalReason    String?
+  expiresAt             DateTime
+  isActive              Boolean   @default(true)
+  requiresPostApproval  Boolean   @default(true)
+  deactivatedAt         DateTime?
+  deactivationReason    String?
+  metadata              Json?
+  
+  // Relationships
+  user                  User      @relation(fields: [userId], references: [id])
+  vessel                Vessel    @relation(fields: [vesselId], references: [id])
+  approver              User?     @relation("EmergencyApprover", fields: [approvedBy], references: [id])
+  
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  
+  @@map("emergency_overrides")
+  @@index([userId])
+  @@index([vesselId])
+  @@index([isActive])
+  @@index([expiresAt])
+}
+
+// ============================================================================
+// VESSEL MANAGEMENT
+// ============================================================================
+
+model Vessel {
+  id                String     @id @default(cuid())
+  name              String
+  imoNumber         String     @unique
+  vesselType        String
+  flag              String
+  engineType        String
+  cargoCapacity     Float
+  fuelConsumption   Float
+  crewComplement    Int
+  isActive          Boolean    @default(true)
+  
+  // Position tracking
+  currentLatitude   Float?
+  currentLongitude  Float?
+  positionUpdatedAt DateTime?
+  
+  // Current voyage
+  currentDeparture  String?
+  currentDestination String?
+  currentETA        DateTime?
+  currentRoute      String?
+  
+  // Relationships
+  assignments       VesselAssignment[]
+  requisitions      Requisition[]
+  certificates      VesselCertificate[]
+  specifications    VesselSpecification[]
+  purchaseOrders    PurchaseOrder[]
+  delegations       Delegation[]
+  budgets           Budget[]
+  emergencyOverrides EmergencyOverride[]
+  complianceAlerts  ComplianceAlert[]
+  complianceReports ComplianceReport[]
+  securityIncidents SecurityIncident[]
+  complianceFlags   ComplianceFlag[] @relation("ComplianceFlagVessel")
+  transactionHistory TransactionHistory[] @relation("TransactionHistoryVessel")
+  complianceAuditTrails ComplianceAuditTrail[] @relation("ComplianceAuditTrailVessel")
+  
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  
+  @@map("vessels")
+  @@index([imoNumber])
+  @@index([vesselType])
+  @@index([engineType])
+}
+
+model VesselAssignment {
+  id        String   @id @default(cuid())
+  userId    String
+  vesselId  String
+  startDate DateTime
+  endDate   DateTime?
+  isActive  Boolean  @default(true)
+  
+  // Relationships
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vessel    Vessel   @relation(fields: [vesselId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([userId, vesselId, startDate])
+  @@map("vessel_assignments")
+  @@index([userId])
+  @@index([vesselId])
+  @@index([isActive])
+}
+
+model VesselCertificate {
+  id            String   @id @default(cuid())
+  vesselId      String
+  certificateType String
+  certificateNumber String
+  issuedBy      String
+  issueDate     DateTime
+  expiryDate    DateTime
+  documentUrl   String?
+  
+  // Relationships
+  vessel        Vessel   @relation(fields: [vesselId], references: [id], onDelete: Cascade)
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  @@map("vessel_certificates")
+  @@index([vesselId])
+  @@index([expiryDate])
+  @@index([certificateType])
+}
+
+model VesselSpecification {
+  id            String @id @default(cuid())
+  vesselId      String
+  category      String
+  specification String
+  value         String
+  unit          String?
+  
+  // Relationships
+  vessel        Vessel @relation(fields: [vesselId], references: [id], onDelete: Cascade)
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  @@map("vessel_specifications")
+  @@index([vesselId])
+  @@index([category])
+}
+
+// ============================================================================
+// ITEM CATALOG AND MARITIME INTEGRATION
+// ============================================================================
+
+model ItemCatalog {
+  id                    String            @id @default(cuid())
+  impaCode              String?           @unique
+  issaCode              String?           @unique
+  name                  String
+  description           String?
+  category              ItemCategory
+  criticalityLevel      CriticalityLevel
+  specifications        Json?
+  compatibleVesselTypes String[]
+  compatibleEngineTypes String[]
+  unitOfMeasure         String
+  averagePrice          Float?
+  averagePriceCurrency  String            @default("USD")
+  leadTime              Int?              // in days
+  
+  // Relationships
+  requisitionItems      RequisitionItem[]
+  quoteLineItems        QuoteLineItem[]
+  
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  
+  @@map("item_catalog")
+  @@index([impaCode])
+  @@index([issaCode])
+  @@index([category])
+  @@index([criticalityLevel])
+  @@index([name])
+}
+
+// ============================================================================
+// REQUISITION MANAGEMENT
+// ============================================================================
+
+model Requisition {
+  id                String              @id @default(cuid())
+  requisitionNumber String              @unique
+  vesselId          String
+  requestedById     String
+  urgencyLevel      UrgencyLevel
+  status            RequisitionStatus   @default(DRAFT)
+  totalAmount       Float               @default(0)
+  currency          String              @default("USD")
+  deliveryLocation  String?
+  deliveryDate      DateTime?
+  justification     String?
+  
+  // Emergency override fields
+  emergencyOverride Boolean             @default(false)
+  emergencyReason   String?
+  emergencyApprovedBy String?
+  emergencyApprovedAt DateTime?
+  
+  // Relationships
+  vessel            Vessel              @relation(fields: [vesselId], references: [id])
+  requestedBy       User                @relation(fields: [requestedById], references: [id])
+  items             RequisitionItem[]
+  approvals         Approval[]
+  rfqs              RFQ[]
+  
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  
+  @@map("requisitions")
+  @@index([vesselId])
+  @@index([requestedById])
+  @@index([status])
+  @@index([urgencyLevel])
+  @@index([requisitionNumber])
+}
+
+model RequisitionItem {
+  id              String      @id @default(cuid())
+  requisitionId   String
+  itemCatalogId   String
+  quantity        Float
+  unitPrice       Float?
+  totalPrice      Float?
+  currency        String      @default("USD")
+  specifications  String?
+  notes           String?
+  
+  // Relationships
+  requisition     Requisition @relation(fields: [requisitionId], references: [id], onDelete: Cascade)
+  itemCatalog     ItemCatalog @relation(fields: [itemCatalogId], references: [id])
+  
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  
+  @@map("requisition_items")
+  @@index([requisitionId])
+  @@index([itemCatalogId])
+}
+
+// ============================================================================
+// APPROVAL WORKFLOW
+// ============================================================================
+
+model Approval {
+  id            String         @id @default(cuid())
+  requisitionId String
+  approverId    String
+  level         Int            // 1, 2, 3, etc. for approval hierarchy
+  status        ApprovalStatus @default(PENDING)
+  comments      String?
+  approvedAt    DateTime?
+  
+  // Budget validation
+  budgetLimit   Float?
+  costCenter    String?
+  
+  // Relationships
+  requisition   Requisition    @relation(fields: [requisitionId], references: [id], onDelete: Cascade)
+  approver      User           @relation(fields: [approverId], references: [id])
+  
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  
+  @@map("approvals")
+  @@index([requisitionId])
+  @@index([approverId])
+  @@index([status])
+  @@index([level])
+}
+
+// ============================================================================
+// VENDOR MANAGEMENT AND RFQ SYSTEM
+// ============================================================================
+
+model Vendor {
+  id                String             @id @default(cuid())
+  name              String
+  code              String             @unique
+  email             String?
+  phone             String?
+  website           String?
+  
+  // Contact information
+  contactPersonName String?
+  contactEmail      String?
+  contactPhone      String?
+  
+  // Address
+  address           String?
+  city              String?
+  country           String?
+  postalCode        String?
+  
+  // Banking details (encrypted)
+  bankName          String?
+  accountNumber     String?            // Encrypted
+  routingNumber     String?            // Encrypted
+  swiftCode         String?
+  encryptedBankingData Json?           // Field-level encrypted banking data
+  bankingDataEncryptedAt DateTime?     // When banking data was encrypted
+  bankingDataLastAccessed DateTime?    // Last access timestamp for audit
+  
+  // Business details
+  taxId             String?
+  registrationNumber String?
+  paymentTerms      String?
+  creditLimit       Float?
+  creditLimitCurrency String           @default("USD")
+  
+  // Performance ratings
+  qualityRating     Float              @default(0)
+  deliveryRating    Float              @default(0)
+  priceRating       Float              @default(0)
+  overallScore      Float              @default(0)
+  
+  // Status
+  isActive          Boolean            @default(true)
+  isApproved        Boolean            @default(false)
+  
+  // Relationships
+  serviceAreas      VendorServiceArea[]
+  portCapabilities  VendorPortCapability[]
+  certifications    VendorCertification[]
+  rfqs              RFQVendor[]
+  quotes            Quote[]
+  purchaseOrders    PurchaseOrder[]
+  
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  
+  @@map("vendors")
+  @@index([code])
+  @@index([isActive])
+  @@index([isApproved])
+  @@index([overallScore])
+}
+
+model VendorServiceArea {
+  id        String @id @default(cuid())
+  vendorId  String
+  country   String
+  region    String?
+  ports     String[] // Array of port codes
+  
+  // Relationships
+  vendor    Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  
+  @@map("vendor_service_areas")
+  @@index([vendorId])
+  @@index([country])
+}
+
+model VendorPortCapability {
+  id           String @id @default(cuid())
+  vendorId     String
+  portCode     String
+  portName     String
+  capabilities String[] // e.g., ["delivery", "customs", "warehousing"]
+  
+  // Relationships
+  vendor       Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  
+  createdAt    DateTime @default(now())
+  
+  @@map("vendor_port_capabilities")
+  @@index([vendorId])
+  @@index([portCode])
+}
+
+model VendorCertification {
+  id              String   @id @default(cuid())
+  vendorId        String
+  certificationType String
+  certificateNumber String
+  issuedBy        String
+  issueDate       DateTime
+  expiryDate      DateTime?
+  documentUrl     String?
+  
+  // Relationships
+  vendor          Vendor   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("vendor_certifications")
+  @@index([vendorId])
+  @@index([certificationType])
+  @@index([expiryDate])
+}
+
+model RFQ {
+  id            String      @id @default(cuid())
+  rfqNumber     String      @unique
+  requisitionId String
+  title         String
+  description   String?
+  currency      String      @default("USD")
+  status        RFQStatus   @default(DRAFT)
+  
+  // Delivery requirements
+  deliveryLocation String?
+  deliveryDate     DateTime?
+  
+  // RFQ timeline
+  issueDate        DateTime?
+  responseDeadline DateTime?
+  
+  // Relationships
+  requisition      Requisition @relation(fields: [requisitionId], references: [id])
+  vendors          RFQVendor[]
+  quotes           Quote[]
+  
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  
+  @@map("rfqs")
+  @@index([requisitionId])
+  @@index([status])
+  @@index([rfqNumber])
+}
+
+model RFQVendor {
+  id        String   @id @default(cuid())
+  rfqId     String
+  vendorId  String
+  sentAt    DateTime?
+  
+  // Relationships
+  rfq       RFQ      @relation(fields: [rfqId], references: [id], onDelete: Cascade)
+  vendor    Vendor   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  
+  @@unique([rfqId, vendorId])
+  @@map("rfq_vendors")
+  @@index([rfqId])
+  @@index([vendorId])
+}
+
+// ============================================================================
+// QUOTE MANAGEMENT
+// ============================================================================
+
+model Quote {
+  id              String          @id @default(cuid())
+  quoteNumber     String          @unique
+  rfqId           String
+  vendorId        String
+  status          QuoteStatus     @default(PENDING)
+  totalAmount     Float
+  currency        String          @default("USD")
+  
+  // Delivery terms
+  deliveryTerms   String?
+  deliveryDate    DateTime?
+  validUntil      DateTime?
+  
+  // Payment terms
+  paymentTerms    String?
+  
+  // Additional information
+  notes           String?
+  attachments     String[]        // URLs to uploaded files
+  
+  // Scoring
+  priceScore      Float?
+  deliveryScore   Float?
+  qualityScore    Float?
+  locationScore   Float?
+  totalScore      Float?
+  
+  // Relationships
+  rfq             RFQ             @relation(fields: [rfqId], references: [id])
+  vendor          Vendor          @relation(fields: [vendorId], references: [id])
+  lineItems       QuoteLineItem[]
+  purchaseOrder   PurchaseOrder?
+  
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  
+  @@map("quotes")
+  @@index([rfqId])
+  @@index([vendorId])
+  @@index([status])
+  @@index([totalScore])
+}
+
+model QuoteLineItem {
+  id            String      @id @default(cuid())
+  quoteId       String
+  itemCatalogId String
+  quantity      Float
+  unitPrice     Float
+  totalPrice    Float
+  currency      String      @default("USD")
+  specifications String?
+  notes         String?
+  
+  // Relationships
+  quote         Quote       @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  itemCatalog   ItemCatalog @relation(fields: [itemCatalogId], references: [id])
+  
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  
+  @@map("quote_line_items")
+  @@index([quoteId])
+  @@index([itemCatalogId])
+}
+
+// ============================================================================
+// PURCHASE ORDER MANAGEMENT
+// ============================================================================
+
+model PurchaseOrder {
+  id              String         @id @default(cuid())
+  poNumber        String         @unique
+  quoteId         String         @unique
+  vendorId        String
+  vesselId        String
+  status          POStatus       @default(DRAFT)
+  
+  // Financial details
+  totalAmount     Float
+  currency        String         @default("USD")
+  exchangeRate    Float          @default(1)
+  
+  // Category for financial reporting
+  categoryCode    String?
+  
+  // Terms and conditions
+  paymentTerms    String?
+  deliveryTerms   String?
+  
+  // Delivery information
+  deliveryAddress String?
+  deliveryDate    DateTime?
+  
+  // Additional information
+  notes           String?
+  attachments     String[]       // URLs to uploaded files
+  
+  // Relationships
+  quote           Quote          @relation(fields: [quoteId], references: [id])
+  vendor          Vendor         @relation(fields: [vendorId], references: [id])
+  vessel          Vessel         @relation(fields: [vesselId], references: [id])
+  category        PurchaseCategory? @relation(fields: [categoryCode], references: [code])
+  lineItems       POLineItem[]
+  deliveries      Delivery[]
+  invoices        Invoice[]
+  
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  
+  @@map("purchase_orders")
+  @@index([vendorId])
+  @@index([vesselId])
+  @@index([status])
+  @@index([poNumber])
+  @@index([categoryCode])
+}
+
+model POLineItem {
+  id              String        @id @default(cuid())
+  purchaseOrderId String
+  itemDescription String
+  quantity        Float
+  unitPrice       Float
+  totalPrice      Float
+  currency        String        @default("USD")
+  specifications  String?
+  
+  // Relationships
+  purchaseOrder   PurchaseOrder @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  @@map("po_line_items")
+  @@index([purchaseOrderId])
+}
+
+// ============================================================================
+// DELIVERY MANAGEMENT
+// ============================================================================
+
+model Delivery {
+  id              String         @id @default(cuid())
+  deliveryNumber  String         @unique
+  purchaseOrderId String
+  status          DeliveryStatus @default(SCHEDULED)
+  
+  // Delivery details
+  scheduledDate   DateTime?
+  actualDate      DateTime?
+  deliveryAddress String?
+  
+  // Tracking information
+  trackingNumber  String?
+  carrier         String?
+  
+  // Confirmation
+  receivedBy      String?
+  photoUrls       String[]       // URLs to delivery photos
+  notes           String?
+  
+  // Relationships
+  purchaseOrder   PurchaseOrder  @relation(fields: [purchaseOrderId], references: [id])
+  
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  
+  @@map("deliveries")
+  @@index([purchaseOrderId])
+  @@index([status])
+  @@index([deliveryNumber])
+}
+
+// ============================================================================
+// INVOICE PROCESSING AND PAYMENT
+// ============================================================================
+
+model Invoice {
+  id              String        @id @default(cuid())
+  invoiceNumber   String        @unique
+  purchaseOrderId String
+  status          InvoiceStatus @default(RECEIVED)
+  
+  // Financial details
+  totalAmount     Float
+  currency        String        @default("USD")
+  exchangeRate    Float         @default(1)
+  
+  // Invoice details
+  invoiceDate     DateTime
+  dueDate         DateTime?
+  
+  // OCR and processing
+  ocrData         Json?         // Extracted OCR data
+  matchingResults Json?         // Three-way matching results
+  
+  // Payment information
+  paidAmount      Float?
+  paidDate        DateTime?
+  paymentReference String?
+  
+  // Additional information
+  notes           String?
+  attachments     String[]      // URLs to uploaded files
+  
+  // Relationships
+  purchaseOrder   PurchaseOrder @relation(fields: [purchaseOrderId], references: [id])
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  @@map("invoices")
+  @@index([purchaseOrderId])
+  @@index([status])
+  @@index([invoiceNumber])
+  @@index([dueDate])
+}
+
+// ============================================================================
+// AUDIT AND COMPLIANCE
+// ============================================================================
+
+model AuditLog {
+  id          String      @id @default(cuid())
+  userId      String?
+  action      AuditAction
+  resource    String      // Table/entity name
+  resourceId  String?     // ID of the affected resource
+  oldValues   Json?       // Previous values (for updates)
+  newValues   Json?       // New values (for creates/updates)
+  ipAddress   String?
+  userAgent   String?
+  sessionId   String?
+  
+  // Security enhancements
+  severity    String      @default("LOW")
+  category    String      @default("SYSTEM")
+  
+  // Additional context
+  vesselId    String?
+  metadata    Json?       // Additional context data
+  
+  // Relationships
+  user        User?       @relation(fields: [userId], references: [id])
+  
+  createdAt   DateTime    @default(now())
+  
+  @@map("audit_logs")
+  @@index([userId])
+  @@index([action])
+  @@index([resource])
+  @@index([severity])
+  @@index([category])
+  @@index([ipAddress])
+  @@index([createdAt])
+  @@index([vesselId])
+}
+
+// ============================================================================
+// FINANCIAL MANAGEMENT
+// ============================================================================
+
+model CostCenter {
+  id          String @id @default(cuid())
+  code        String @unique
+  name        String
+  description String?
+  parentId    String?
+  isActive    Boolean @default(true)
+  
+  // Relationships
+  parent      CostCenter? @relation("CostCenterHierarchy", fields: [parentId], references: [id])
+  children    CostCenter[] @relation("CostCenterHierarchy")
+  budgets     Budget[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("cost_centers")
+  @@index([code])
+  @@index([parentId])
+}
+
+model Budget {
+  id          String   @id @default(cuid())
+  vesselId    String?
+  costCenterId String?
+  category    String
+  amount      Float
+  currency    String   @default("USD")
+  period      String   // e.g., "2024-Q1", "2024-01"
+  startDate   DateTime
+  endDate     DateTime
+  
+  // Relationships
+  vessel      Vessel?     @relation(fields: [vesselId], references: [id])
+  costCenter  CostCenter? @relation(fields: [costCenterId], references: [id])
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("budgets")
+  @@index([vesselId])
+  @@index([costCenterId])
+  @@index([period])
+  @@index([startDate, endDate])
+}
+
+model ExchangeRate {
+  id          String   @id @default(cuid())
+  fromCurrency String
+  toCurrency  String
+  rate        Float
+  date        DateTime
+  source      String   // API source
+  
+  createdAt   DateTime @default(now())
+  
+  @@unique([fromCurrency, toCurrency, date])
+  @@map("exchange_rates")
+  @@index([fromCurrency, toCurrency])
+  @@index([date])
+}
+
+model PurchaseCategory {
+  id              String @id @default(cuid())
+  code            String @unique
+  name            String
+  description     String?
+  parentId        String?
+  budgetLimit     Float?
+  budgetCurrency  String @default("USD")
+  approvalRequired Boolean @default(false)
+  isActive        Boolean @default(true)
+  
+  // Relationships
+  parent          PurchaseCategory? @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children        PurchaseCategory[] @relation("CategoryHierarchy")
+  purchaseOrders  PurchaseOrder[]
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("purchase_categories")
+  @@index([code])
+  @@index([parentId])
+  @@index([isActive])
+}
+
+// ============================================================================
+// SECURITY HARDENING AND INCIDENT MANAGEMENT
+// ============================================================================
+
+model SecurityIncident {
+  id                String   @id @default(cuid())
+  type              String   // UNAUTHORIZED_ACCESS, SUSPICIOUS_ACTIVITY, etc.
+  severity          String   // LOW, MEDIUM, HIGH, CRITICAL
+  status            String   @default("OPEN") // OPEN, INVESTIGATING, RESOLVED, CLOSED
+  title             String
+  description       String
+  userId            String?
+  ipAddress         String?
+  userAgent         String?
+  vesselId          String?
+  affectedResources String[]
+  indicators        Json     @default("[]")
+  mitigationSteps   String[]
+  detectedBy        String   @default("SYSTEM") // SYSTEM, USER, EXTERNAL
+  riskScore         Int      @default(0)
+  resolvedBy        String?
+  resolvedAt        DateTime?
+  
+  // Relationships
+  user              User?    @relation(fields: [userId], references: [id])
+  vessel            Vessel?  @relation(fields: [vesselId], references: [id])
+  resolver          User?    @relation("SecurityIncidentResolver", fields: [resolvedBy], references: [id])
+  alerts            SecurityAlert[]
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@map("security_incidents")
+  @@index([type])
+  @@index([severity])
+  @@index([status])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model SecurityAlert {
+  id            String   @id @default(cuid())
+  incidentId    String
+  alertLevel    String   // INFO, WARNING, CRITICAL
+  recipients    String[]
+  channels      String[] // EMAIL, SMS, WEBHOOK, DASHBOARD
+  message       String
+  sentAt        DateTime @default(now())
+  acknowledgedBy String?
+  acknowledgedAt DateTime?
+  
+  // Relationships
+  incident      SecurityIncident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  acknowledger  User?           @relation(fields: [acknowledgedBy], references: [id])
+  
+  @@map("security_alerts")
+  @@index([incidentId])
+  @@index([alertLevel])
+}
+
+model DataRetentionPolicy {
+  id                    String  @id @default(cuid())
+  resource              String  @unique
+  retentionPeriodDays   Int
+  archiveBeforeDelete   Boolean @default(true)
+  complianceRequirement String?
+  legalHoldExemption    Boolean @default(false)
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  
+  @@map("data_retention_policies")
+}
+
+model ArchivedData {
+  id              String   @id @default(cuid())
+  resource        String
+  resourceId      String
+  originalData    Json
+  archivedAt      DateTime @default(now())
+  retentionPolicy String
+  complianceFlags String[]
+  checksum        String?
+  
+  @@map("archived_data")
+  @@index([resource])
+  @@index([archivedAt])
+}
+
+model LegalHold {
+  id         String    @id @default(cuid())
+  resource   String
+  resourceId String
+  reason     String
+  placedBy   String
+  placedAt   DateTime  @default(now())
+  removedBy  String?
+  removedAt  DateTime?
+  status     String    @default("ACTIVE") // ACTIVE, REMOVED
+  
+  // Relationships
+  placer     User      @relation("LegalHoldPlacer", fields: [placedBy], references: [id])
+  remover    User?     @relation("LegalHoldRemover", fields: [removedBy], references: [id])
+  
+  @@map("legal_holds")
+  @@index([resource, resourceId])
+  @@index([status])
+}
+
+// ============================================================================
+// DOCUMENT VERSION CONTROL AND COMPLIANCE
+// ============================================================================
+
+model DocumentVersion {
+  id                String   @id @default(cuid())
+  documentId        String
+  version           Int
+  title             String
+  content           String?
+  fileUrl           String?
+  fileSize          Int?
+  mimeType          String?
+  checksum          String
+  createdBy         String
+  changeDescription String?
+  tags              String[]
+  metadata          Json     @default("{}")
+  
+  // Relationships
+  creator           User     @relation("DocumentVersionCreator", fields: [createdBy], references: [id])
+  complianceFlags   ComplianceFlag[]
+  
+  createdAt         DateTime @default(now())
+  
+  @@unique([documentId, version])
+  @@map("document_versions")
+  @@index([documentId])
+  @@index([version])
+  @@index([createdBy])
+}
+
+model DocumentChangeLog {
+  id                String                @id @default(cuid())
+  documentId        String
+  fromVersion       Int
+  toVersion         Int
+  changeType        String                // CREATE, UPDATE, DELETE, RESTORE
+  changedBy         String
+  changeDescription String
+  fieldChanges      Json                  @default("[]")
+  
+  // Relationships
+  changer           User                  @relation("DocumentChangeLogChanger", fields: [changedBy], references: [id])
+  
+  changedAt         DateTime              @default(now())
+  
+  @@map("document_change_logs")
+  @@index([documentId])
+  @@index([changedBy])
+  @@index([changedAt])
+}
+
+model ComplianceFlag {
+  id             String          @id @default(cuid())
+  documentId     String?
+  regulation     String
+  regulationType String          // SOLAS, MARPOL, ISM, GDPR, SOX, CUSTOM
+  flagType       String          // REQUIRED, COMPLIANT, NON_COMPLIANT, UNDER_REVIEW
+  description    String
+  dueDate        DateTime?
+  resolvedAt     DateTime?
+  resolvedBy     String?
+  vesselId       String?
+  metadata       Json            @default("{}")
+  
+  // Relationships
+  document       DocumentVersion? @relation(fields: [documentId], references: [id])
+  resolver       User?           @relation("ComplianceFlagResolver", fields: [resolvedBy], references: [id])
+  vessel         Vessel?         @relation("ComplianceFlagVessel", fields: [vesselId], references: [id])
+  
+  createdAt      DateTime        @default(now())
+  
+  @@map("compliance_flags")
+  @@index([documentId])
+  @@index([regulationType])
+  @@index([flagType])
+  @@index([vesselId])
+  @@index([dueDate])
+}
+
+model TransactionHistory {
+  id              String   @id @default(cuid())
+  transactionType String   // REQUISITION, APPROVAL, RFQ, QUOTE, PURCHASE_ORDER, DELIVERY, INVOICE, PAYMENT
+  entityId        String
+  entityType      String
+  userId          String
+  vesselId        String?
+  action          String
+  status          String
+  previousStatus  String?
+  amount          Float?
+  currency        String?
+  description     String
+  metadata        Json     @default("{}")
+  timestamp       DateTime @default(now())
+  ipAddress       String?
+  userAgent       String?
+  sessionId       String?
+  
+  // Relationships
+  user            User     @relation("TransactionHistoryUser", fields: [userId], references: [id])
+  vessel          Vessel?  @relation("TransactionHistoryVessel", fields: [vesselId], references: [id])
+  
+  @@map("transaction_history")
+  @@index([transactionType])
+  @@index([entityId, entityType])
+  @@index([userId])
+  @@index([vesselId])
+  @@index([timestamp])
+  @@index([amount])
+}
+
+model UserAccountability {
+  id            String   @id @default(cuid())
+  userId        String
+  userEmail     String
+  userName      String
+  role          String
+  transactionId String
+  action        String
+  responsibility String
+  timestamp     DateTime @default(now())
+  vesselId      String?
+  vesselName    String?
+  impactLevel   String   // LOW, MEDIUM, HIGH, CRITICAL
+  complianceFlags String[]
+  
+  @@map("user_accountability")
+  @@index([userId])
+  @@index([transactionId])
+  @@index([timestamp])
+  @@index([impactLevel])
+}
+
+model ComplianceAuditTrail {
+  id               String   @id @default(cuid())
+  regulation       String
+  regulationType   String   // SOLAS, MARPOL, ISM, GDPR, SOX
+  entityType       String
+  entityId         String
+  action           String
+  complianceStatus String   // COMPLIANT, NON_COMPLIANT, UNDER_REVIEW, EXEMPT
+  userId           String
+  vesselId         String?
+  timestamp        DateTime @default(now())
+  evidence         Json     @default("{}")
+  reviewedBy       String?
+  reviewedAt       DateTime?
+  notes            String?
+  
+  // Relationships
+  user             User     @relation("ComplianceAuditTrailUser", fields: [userId], references: [id])
+  vessel           Vessel?  @relation("ComplianceAuditTrailVessel", fields: [vesselId], references: [id])
+  reviewer         User?    @relation("ComplianceAuditTrailReviewer", fields: [reviewedBy], references: [id])
+  
+  @@map("compliance_audit_trails")
+  @@index([regulationType])
+  @@index([entityType, entityId])
+  @@index([userId])
+  @@index([vesselId])
+  @@index([timestamp])
+  @@index([complianceStatus])
+}
+
+// ============================================================================
+// COMPLIANCE MANAGEMENT
+// ============================================================================
+
+model ComplianceAlert {
+  id          String                    @id @default(cuid())
+  alertId     String                    @unique // External alert identifier
+  type        ComplianceAlertType
+  severity    ComplianceAlertSeverity
+  vesselId    String?
+  description String
+  dueDate     DateTime?
+  resolved    Boolean                   @default(false)
+  resolvedAt  DateTime?
+  resolvedBy  String?
+  alertData   Json?                     // Additional alert-specific data
+  
+  // Relationships
+  vessel      Vessel?                   @relation(fields: [vesselId], references: [id])
+  resolver    User?                     @relation("ComplianceAlertResolver", fields: [resolvedBy], references: [id])
+  
+  createdAt   DateTime                  @default(now())
+  updatedAt   DateTime                  @updatedAt
+  
+  @@map("compliance_alerts")
+  @@index([vesselId])
+  @@index([type])
+  @@index([severity])
+  @@index([resolved])
+  @@index([createdAt])
+}
+
+model ComplianceReport {
+  id          String   @id @default(cuid())
+  reportId    String   @unique
+  type        String   // SOLAS, MARPOL, ISM
+  vesselId    String?
+  startDate   DateTime
+  endDate     DateTime
+  generatedBy String
+  status      String   @default("DRAFT") // DRAFT, FINAL, SUBMITTED
+  reportData  Json     // Report content
+  
+  // Relationships
+  vessel      Vessel?  @relation(fields: [vesselId], references: [id])
+  generator   User     @relation("ComplianceReportGenerator", fields: [generatedBy], references: [id])
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("compliance_reports")
+  @@index([vesselId])
+  @@index([type])
+  @@index([generatedBy])
+  @@index([createdAt])
+}
+
+// ============================================================================
+// SYSTEM CONFIGURATION
+// ============================================================================
+
+model SystemSetting {
+  id          String @id @default(cuid())
+  key         String @unique
+  value       String
+  description String?
+  category    String
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("system_settings")
+  @@index([category])
+}
+
+model NotificationTemplate {
+  id          String @id @default(cuid())
+  name        String @unique
+  subject     String
+  body        String
+  type        String // email, sms, push
+  isActive    Boolean @default(true)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("notification_templates")
+  @@index([type])
+}
+
+// ============================================================================
+// BUSINESS INTELLIGENCE INTEGRATION
+// ============================================================================
+
+model BIConfiguration {
+  id              String  @id @default(cuid())
+  name            String
+  type            String  // powerbi, tableau, qlik, generic
+  isActive        Boolean @default(true)
+  configuration   Json    // Tool-specific configuration
+  authentication  Json    // Authentication credentials and settings
+  dataMapping     Json    // Data mapping and field configurations
+  refreshSchedule Json?   // Optional refresh schedule settings
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("bi_configurations")
+  @@index([type])
+  @@index([isActive])
+}

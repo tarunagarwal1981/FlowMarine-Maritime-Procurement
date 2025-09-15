@@ -1,0 +1,58 @@
+# Multi-stage build for production backend
+FROM node:18-alpine AS builder
+
+# Create app directory
+WORKDIR /app
+
+# Copy package files
+COPY packages/backend/package*.json ./
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci --only=production && npm cache clean --force
+
+# Copy source code
+COPY packages/backend ./
+
+# Build the application
+RUN npm run build
+
+# Production stage
+FROM node:18-alpine AS production
+
+# Security hardening
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S flowmarine -u 1001 -G nodejs
+
+# Install security updates
+RUN apk update && apk upgrade && \
+    apk add --no-cache dumb-init && \
+    rm -rf /var/cache/apk/*
+
+# Set working directory
+WORKDIR /app
+
+# Copy built application
+COPY --from=builder --chown=flowmarine:nodejs /app/dist ./dist
+COPY --from=builder --chown=flowmarine:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=flowmarine:nodejs /app/package.json ./package.json
+COPY --from=builder --chown=flowmarine:nodejs /app/prisma ./prisma
+
+# Create logs directory
+RUN mkdir -p /app/logs && chown flowmarine:nodejs /app/logs
+
+# Switch to non-root user
+USER flowmarine
+
+# Expose port
+EXPOSE 3001
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node dist/healthcheck.js
+
+# Use dumb-init to handle signals properly
+ENTRYPOINT ["dumb-init", "--"]
+
+# Start the application
+CMD ["node", "dist/server.js"]

@@ -1,0 +1,119 @@
+{
+  "appName": "FlowMarine",
+  "subtitle": "Maritime Procurement Platform",
+  "version": "1.0.0",
+  "bundleId": "com.flowmarine.mobile",
+  "category": "Business",
+  "contentRating": "4+",
+  "supportedLanguages": ["en", "es", "fr", "de", "zh"],
+  
+  "descriptions": {
+    "short": "Streamline maritime procurement operations with FlowMarine's comprehensive mobile platform designed for shipping companies and vessel crews.",
+    
+    "full": {
+      "en": "FlowMarine revolutionizes maritime procurement with a comprehensive mobile platform designed specifically for shipping companies, vessel crews, and maritime professionals. Manage your entire procurement lifecycle from requisitions to payments, even while at sea.\n\n🚢 KEY FEATURES:\n\n• VESSEL REQUISITIONS: Create and manage procurement requests with offline capabilities for seamless operations at sea\n• REAL-TIME ANALYTICS: Monitor fleet spending, vendor performance, and operational metrics with interactive dashboards\n• VENDOR MANAGEMENT: Compare quotes, track supplier performance, and manage relationships efficiently\n• OFFLINE OPERATIONS: Work without internet connection - all changes sync automatically when back online\n• APPROVAL WORKFLOWS: Streamlined approval processes with role-based permissions and emergency overrides\n• MARITIME INTEGRATION: Built-in IMPA/ISSA catalog integration and port logistics coordination\n• FINANCIAL CONTROLS: Multi-currency support, budget tracking, and automated invoice processing\n• COMPLIANCE READY: Maintain audit trails and regulatory compliance for maritime operations\n\n💼 PERFECT FOR:\n• Ship Captains and Chief Engineers\n• Fleet Managers and Superintendents\n• Procurement Managers\n• Maritime Finance Teams\n• Vessel Crews\n\n🌊 MARITIME-SPECIFIC BENEFITS:\n• Designed for maritime operations and vessel environments\n• Offline-first architecture for reliable sea operations\n• Integration with maritime standards (IMPA/ISSA)\n• Port delivery coordination and logistics optimization\n• Emergency procurement procedures with captain overrides\n• Vessel-specific item compatibility and recommendations\n\n📱 MOBILE OPTIMIZED:\n• Touch-friendly interface designed for maritime professionals\n• Barcode scanning for parts identification\n• Camera integration for documentation\n• Biometric authentication for security\n• Push notifications for critical updates\n\nTransform your maritime procurement operations with FlowMarine - where efficiency meets the sea.",
+      
+      "es": "FlowMarine revoluciona las adquisiciones marítimas con una plataforma móvil integral diseñada específicamente para compañías navieras, tripulaciones de buques y profesionales marítimos. Gestiona todo tu ciclo de adquisiciones desde requisiciones hasta pagos, incluso en alta mar.\n\n🚢 CARACTERÍSTICAS PRINCIPALES:\n\n• REQUISICIONES DE BUQUES: Crea y gestiona solicitudes de adquisición con capacidades offline para operaciones fluidas en el mar\n• ANÁLISIS EN TIEMPO REAL: Monitorea gastos de flota, rendimiento de proveedores y métricas operacionales con paneles interactivos\n• GESTIÓN DE PROVEEDORES: Compara cotizaciones, rastrea el rendimiento de proveedores y gestiona relaciones eficientemente\n• OPERACIONES OFFLINE: Trabaja sin conexión a internet - todos los cambios se sincronizan automáticamente al volver online\n• FLUJOS DE APROBACIÓN: Procesos de aprobación optimizados con permisos basados en roles y anulaciones de emergencia\n• INTEGRACIÓN MARÍTIMA: Integración incorporada del catálogo IMPA/ISSA y coordinación logística portuaria\n• CONTROLES FINANCIEROS: Soporte multi-moneda, seguimiento de presupuesto y procesamiento automatizado de facturas\n• LISTO PARA CUMPLIMIENTO: Mantén registros de auditoría y cumplimiento regulatorio para operaciones marítimas\n\nTransforma tus operaciones de adquisición marítima con FlowMarine - donde la eficiencia se encuentra con el mar.",
+      
+      "fr": "FlowMarine révolutionne les achats maritimes avec une plateforme mobile complète conçue spécifiquement pour les compagnies maritimes, les équipages de navires et les professionnels maritimes. Gérez l'ensemble de votre cycle d'approvisionnement des réquisitions aux paiements, même en mer.\n\n🚢 FONCTIONNALITÉS CLÉS:\n\n• RÉQUISITIONS DE NAVIRES: Créez et gérez les demandes d'approvisionnement avec des capacités hors ligne pour des opérations fluides en mer\n• ANALYSES EN TEMPS RÉEL: Surveillez les dépenses de flotte, les performances des fournisseurs et les métriques opérationnelles avec des tableaux de bord interactifs\n• GESTION DES FOURNISSEURS: Comparez les devis, suivez les performances des fournisseurs et gérez les relations efficacement\n• OPÉRATIONS HORS LIGNE: Travaillez sans connexion internet - tous les changements se synchronisent automatiquement au retour en ligne\n• FLUX D'APPROBATION: Processus d'approbation rationalisés avec permissions basées sur les rôles et dérogations d'urgence\n• INTÉGRATION MARITIME: Intégration intégrée du catalogue IMPA/ISSA et coordination logistique portuaire\n• CONTRÔLES FINANCIERS: Support multi-devises, suivi budgétaire et traitement automatisé des factures\n• PRÊT POUR LA CONFORMITÉ: Maintenez les pistes d'audit et la conformité réglementaire pour les opérations maritimes\n\nTransformez vos opérations d'approvisionnement maritime avec FlowMarine - où l'efficacité rencontre la mer."
+    }
+  },
+  
+  "keywords": {
+    "ios": ["maritime", "procurement", "shipping", "vessel", "fleet management", "offshore", "marine", "supply chain", "logistics", "business"],
+    "android": "maritime,procurement,shipping,vessel,fleet management,offshore,marine,supply chain,logistics,business,requisition,vendor,analytics"
+  },
+  
+  "features": [
+    "Offline-capable maritime procurement platform",
+    "Real-time fleet analytics and reporting",
+    "Vendor management and quote comparison",
+    "IMPA/ISSA catalog integration",
+    "Multi-currency financial controls",
+    "Role-based approval workflows",
+    "Barcode scanning and camera integration",
+    "Biometric authentication",
+    "Push notifications",
+    "Audit trail and compliance reporting"
+  ],
+  
+  "screenshots": {
+    "captions": {
+      "requisition-list": "Manage vessel requisitions with ease - create, track, and approve procurement requests even while offline at sea",
+      "analytics-dashboard": "Monitor your fleet's performance with real-time analytics, spending insights, and operational metrics",
+      "vendor-comparison": "Compare vendor quotes side-by-side and make informed procurement decisions with performance ratings",
+      "mobile-interface": "Touch-optimized interface designed specifically for maritime professionals working in challenging environments",
+      "offline-mode": "Continue working seamlessly without internet connection - perfect for extended voyages and remote operations"
+    }
+  },
+  
+  "privacy": {
+    "dataCollection": [
+      "Account information (email, name, role)",
+      "Vessel and fleet data",
+      "Procurement transactions and history",
+      "Location data (for delivery coordination)",
+      "Device information (for offline sync)",
+      "Usage analytics (for app improvement)"
+    ],
+    "dataUsage": [
+      "Provide maritime procurement services",
+      "Sync data across devices",
+      "Send relevant notifications",
+      "Improve app performance",
+      "Ensure security and compliance"
+    ],
+    "dataSharing": "Data is not shared with third parties except as required for procurement operations (vendors, payment processors) or as required by law."
+  },
+  
+  "support": {
+    "website": "https://flowmarine.com",
+    "email": "support@flowmarine.com",
+    "phone": "+1-800-FLOWMARINE",
+    "documentation": "https://docs.flowmarine.com/mobile",
+    "faq": "https://flowmarine.com/faq"
+  },
+  
+  "requirements": {
+    "ios": {
+      "minimumVersion": "13.0",
+      "recommendedVersion": "15.0",
+      "devices": ["iPhone", "iPad"],
+      "storage": "100 MB"
+    },
+    "android": {
+      "minimumSdk": 21,
+      "targetSdk": 34,
+      "storage": "100 MB",
+      "permissions": [
+        "INTERNET",
+        "ACCESS_NETWORK_STATE",
+        "CAMERA",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE",
+        "USE_BIOMETRIC",
+        "USE_FINGERPRINT"
+      ]
+    }
+  },
+  
+  "releaseNotes": {
+    "1.0.0": {
+      "date": "2024-02-15",
+      "features": [
+        "🚀 Initial release of FlowMarine Mobile",
+        "📱 Complete maritime procurement platform",
+        "🌊 Offline-first architecture for sea operations",
+        "📊 Real-time analytics and dashboards",
+        "🏪 Vendor management and quote comparison",
+        "🔒 Biometric authentication and security",
+        "📷 Barcode scanning and camera integration",
+        "🔄 Automatic sync when back online",
+        "🌍 Multi-language support",
+        "📋 IMPA/ISSA catalog integration"
+      ]
+    }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "appName": "FlowMarine",
+  "tagline": "Maritime Procurement Platform",
+  "screenshots": {
+    "ios": {
+      "iPhone": {
+        "6.7": {
+          "size": "1290x2796",
+          "description": "iPhone 14 Pro Max, iPhone 15 Pro Max"
+        },
+        "6.5": {
+          "size": "1242x2688",
+          "description": "iPhone XS Max, iPhone 11 Pro Max"
+        },
+        "5.5": {
+          "size": "1242x2208",
+          "description": "iPhone 8 Plus"
+        }
+      },
+      "iPad": {
+        "12.9": {
+          "size": "2048x2732",
+          "description": "iPad Pro 12.9-inch"
+        },
+        "11": {
+          "size": "1668x2388",
+          "description": "iPad Pro 11-inch"
+        }
+      }
+    },
+    "android": {
+      "phone": {
+        "size": "1080x1920",
+        "description": "Standard Android phone"
+      },
+      "tablet": {
+        "size": "1200x1920",
+        "description": "Android tablet"
+      }
+    }
+  },
+  "features": [
+    {
+      "title": "Streamlined Requisitions",
+      "description": "Create and manage vessel requisitions with ease, even offline at sea",
+      "screen": "requisition-list"
+    },
+    {
+      "title": "Real-time Analytics",
+      "description": "Monitor fleet spending and performance with interactive dashboards",
+      "screen": "analytics-dashboard"
+    },
+    {
+      "title": "Vendor Management",
+      "description": "Compare quotes and manage supplier relationships efficiently",
+      "screen": "vendor-comparison"
+    },
+    {
+      "title": "Mobile Optimized",
+      "description": "Touch-friendly interface designed for maritime professionals",
+      "screen": "mobile-interface"
+    },
+    {
+      "title": "Offline Capable",
+      "description": "Work seamlessly without internet connection, sync when available",
+      "screen": "offline-mode"
+    }
+  ]
+}

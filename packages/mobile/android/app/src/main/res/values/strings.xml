@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FlowMarine</string>
+    <string name="app_display_name">FlowMarine</string>
+    <string name="app_description">Maritime Procurement Platform</string>
+</resources>

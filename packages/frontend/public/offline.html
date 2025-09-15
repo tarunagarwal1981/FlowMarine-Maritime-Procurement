@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowMarine - Offline</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        .icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 30px;
+            opacity: 0.8;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .features {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .features h2 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .feature-list {
+            list-style: none;
+            text-align: left;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            opacity: 0.9;
+        }
+        
+        .feature-list li::before {
+            content: "✓";
+            color: #10b981;
+            font-weight: bold;
+            margin-right: 12px;
+            font-size: 1.1rem;
+        }
+        
+        .retry-button {
+            background: white;
+            color: #1e3a8a;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .retry-button:hover {
+            background: #f3f4f6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .status {
+            margin-top: 30px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .online {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .offline {
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        
+        @media (max-width: 640px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .features {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Ship/Maritime Icon -->
+        <div class="icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 17h18l-2-6H5l-2 6zm3.5-4h11l.67 2H5.83l.67-2zM12 2L8 6v4h8V6l-4-4zm-2 6V7h4v1h-4z"/>
+                <path d="M2 19h20v2H2v-2z"/>
+            </svg>
+        </div>
+        
+        <h1>FlowMarine</h1>
+        <p class="subtitle">
+            You're currently offline, but you can still work with FlowMarine's offline capabilities.
+        </p>
+        
+        <div class="features">
+            <h2>Available Offline Features</h2>
+            <ul class="feature-list">
+                <li>Create and edit requisitions</li>
+                <li>Browse cached item catalog</li>
+                <li>View vessel information</li>
+                <li>Access previously loaded data</li>
+                <li>Automatic sync when online</li>
+            </ul>
+        </div>
+        
+        <button class="retry-button" onclick="retryConnection()">
+            Try Again
+        </button>
+        
+        <div class="status" id="status">
+            <span id="connection-status">Checking connection...</span>
+        </div>
+    </div>
+
+    <script>
+        // Check online status
+        function updateConnectionStatus() {
+            const status = document.getElementById('connection-status');
+            const statusDiv = document.getElementById('status');
+            
+            if (navigator.onLine) {
+                status.textContent = 'Connection restored! You can now access all features.';
+                statusDiv.className = 'status online';
+            } else {
+                status.textContent = 'You are currently offline. Some features may be limited.';
+                statusDiv.className = 'status offline';
+            }
+        }
+        
+        // Retry connection
+        function retryConnection() {
+            if (navigator.onLine) {
+                // Try to navigate back to the main app
+                window.location.href = '/';
+            } else {
+                // Show offline message
+                alert('Still offline. Please check your internet connection and try again.');
+            }
+        }
+        
+        // Listen for online/offline events
+        window.addEventListener('online', updateConnectionStatus);
+        window.addEventListener('offline', updateConnectionStatus);
+        
+        // Initial status check
+        updateConnectionStatus();
+        
+        // Auto-retry when coming back online
+        window.addEventListener('online', () => {
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 1000);
+        });
+        
+        // Register service worker if not already registered
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then(registration => {
+                    console.log('Service Worker registered:', registration);
+                })
+                .catch(error => {
+                    console.log('Service Worker registration failed:', error);
+                });
+        }
+    </script>
+</body>
+</html>

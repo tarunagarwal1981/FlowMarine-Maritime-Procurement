@@ -1,0 +1,30 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="256" cy="256" r="256" fill="#0ea5e9"/>
+  
+  <!-- Ship Hull -->
+  <path d="M120 320 L392 320 C392 320 400 340 392 360 L120 360 C112 340 120 320 120 320 Z" fill="#ffffff"/>
+  
+  <!-- Ship Deck -->
+  <rect x="140" y="280" width="232" height="40" rx="4" fill="#f1f5f9"/>
+  
+  <!-- Mast -->
+  <rect x="250" y="160" width="12" height="120" fill="#64748b"/>
+  
+  <!-- Sail -->
+  <path d="M270 170 L350 180 L350 250 L270 240 Z" fill="#ffffff"/>
+  
+  <!-- Flag -->
+  <rect x="262" y="160" width="30" height="20" fill="#dc2626"/>
+  
+  <!-- Waves -->
+  <path d="M80 380 Q120 370 160 380 T240 380 T320 380 T400 380 T480 380" stroke="#0284c7" stroke-width="4" fill="none"/>
+  <path d="M60 400 Q100 390 140 400 T220 400 T300 400 T380 400 T460 400" stroke="#0284c7" stroke-width="3" fill="none"/>
+  
+  <!-- Anchor (small) -->
+  <g transform="translate(180, 290)">
+    <circle cx="8" cy="8" r="3" fill="#64748b"/>
+    <rect x="7" y="11" width="2" height="15" fill="#64748b"/>
+    <path d="M4 20 L12 20 M2 24 L14 24" stroke="#64748b" stroke-width="2"/>
+  </g>
+</svg>

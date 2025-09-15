@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>CFBundleDisplayName</key>
+    <string>FlowMarine</string>
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleIdentifier</key>
+    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>$(PRODUCT_NAME)</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0.0</string>
+    <key>CFBundleSignature</key>
+    <string>????</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>LSRequiresIPhoneOS</key>
+    <true/>
+    
+    <!-- App Transport Security -->
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSExceptionDomains</key>
+        <dict>
+            <key>localhost</key>
+            <dict>
+                <key>NSExceptionAllowsInsecureHTTPLoads</key>
+                <true/>
+            </dict>
+        </dict>
+    </dict>
+    
+    <!-- Permissions -->
+    <key>NSCameraUsageDescription</key>
+    <string>FlowMarine needs camera access to scan barcodes and document parts for requisitions.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>FlowMarine uses location to coordinate deliveries and optimize logistics for your vessel.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>FlowMarine uses location to coordinate deliveries and optimize logistics for your vessel.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>FlowMarine needs photo library access to attach images to requisitions and documentation.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>FlowMarine uses microphone for voice-to-text input in requisition descriptions.</string>
+    <key>NSFaceIDUsageDescription</key>
+    <string>FlowMarine uses Face ID for secure and convenient authentication.</string>
+    <key>NSMotionUsageDescription</key>
+    <string>FlowMarine uses motion sensors for environmental monitoring and enhanced user experience.</string>
+    
+    <!-- Deep linking URL schemes -->
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLName</key>
+            <string>com.flowmarine.mobile</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>flowmarine</string>
+            </array>
+        </dict>
+        <dict>
+            <key>CFBundleURLName</key>
+            <string>com.flowmarine.mobile.https</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>https</string>
+            </array>
+        </dict>
+    </array>
+    
+    <!-- Associated domains for universal links -->
+    <key>com.apple.developer.associated-domains</key>
+    <array>
+        <string>applinks:app.flowmarine.com</string>
+        <string>applinks:flowmarine.com</string>
+    </array>
+    
+    <!-- Supported interface orientations -->
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <key>UIInterfaceOrientationPortrait</key>
+        <key>UIInterfaceOrientationLandscapeLeft</key>
+        <key>UIInterfaceOrientationLandscapeRight</key>
+    </array>
+    <key>UISupportedInterfaceOrientations~ipad</key>
+    <array>
+        <key>UIInterfaceOrientationPortrait</key>
+        <key>UIInterfaceOrientationPortraitUpsideDown</key>
+        <key>UIInterfaceOrientationLandscapeLeft</key>
+        <key>UIInterfaceOrientationLandscapeRight</key>
+    </array>
+    
+    <!-- Launch screen -->
+    <key>UILaunchStoryboardName</key>
+    <string>LaunchScreen</string>
+    
+    <!-- Status bar -->
+    <key>UIStatusBarStyle</key>
+    <string>UIStatusBarStyleLightContent</string>
+    <key>UIViewControllerBasedStatusBarAppearance</key>
+    <false/>
+    
+    <!-- Background modes -->
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>background-fetch</string>
+        <string>remote-notification</string>
+    </array>
+    
+    <!-- Required device capabilities -->
+    <key>UIRequiredDeviceCapabilities</key>
+    <array>
+        <string>armv7</string>
+    </array>
+    
+    <!-- Minimum OS version -->
+    <key>MinimumOSVersion</key>
+    <string>13.0</string>
+    
+    <!-- App category -->
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.business</string>
+</dict>
+</plist>

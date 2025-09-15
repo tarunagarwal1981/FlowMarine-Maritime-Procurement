@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "allowJs": true,
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": {
+      "@flowmarine/frontend/*": ["packages/frontend/src/*"],
+      "@flowmarine/backend/*": ["packages/backend/src/*"]
+    }
+  },
+  "include": [],
+  "references": [
+    {
+      "path": "./packages/frontend"
+    },
+    {
+      "path": "./packages/backend"
+    }
+  ]
+}

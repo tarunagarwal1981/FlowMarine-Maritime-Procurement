@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: flowmarine-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: flowmarine
+      POSTGRES_USER: flowmarine
+      POSTGRES_PASSWORD: flowmarine_dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - flowmarine-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: flowmarine-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass flowmarine_redis_password
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - flowmarine-network
+
+  postgres-test:
+    image: postgres:15-alpine
+    container_name: flowmarine-postgres-test
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: flowmarine_test
+      POSTGRES_USER: flowmarine_test
+      POSTGRES_PASSWORD: flowmarine_test_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+    networks:
+      - flowmarine-network
+    profiles:
+      - test
+
+volumes:
+  postgres_data:
+  redis_data:
+  postgres_test_data:
+
+networks:
+  flowmarine-network:
+    driver: bridge

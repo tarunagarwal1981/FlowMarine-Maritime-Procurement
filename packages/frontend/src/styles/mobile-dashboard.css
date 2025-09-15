@@ -1,0 +1,315 @@
+/* Mobile Dashboard Styles */
+
+/* Touch-friendly interactions */
+.mobile-dashboard {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Touch targets - minimum 44px for accessibility */
+.mobile-dashboard button,
+.mobile-dashboard .touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Smooth scrolling for mobile */
+.mobile-dashboard {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Mobile navigation styles */
+.mobile-nav-bar {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Touch manipulation for charts */
+.touch-friendly-chart {
+  touch-action: manipulation;
+}
+
+.touch-friendly-chart .chart-container {
+  touch-action: pan-x pan-y pinch-zoom;
+}
+
+/* Mobile widget containers */
+.mobile-widget-container {
+  transition: transform 0.2s ease-in-out;
+}
+
+.mobile-widget-container:active {
+  transform: scale(0.98);
+}
+
+/* Responsive text sizes */
+@media (max-width: 480px) {
+  .mobile-dashboard h1 {
+    font-size: 1.125rem; /* 18px */
+  }
+  
+  .mobile-dashboard h2 {
+    font-size: 1rem; /* 16px */
+  }
+  
+  .mobile-dashboard h3 {
+    font-size: 0.875rem; /* 14px */
+  }
+  
+  .mobile-dashboard .text-xs {
+    font-size: 0.75rem; /* 12px */
+  }
+}
+
+/* Landscape orientation adjustments */
+@media (orientation: landscape) and (max-width: 768px) {
+  .mobile-dashboard .mobile-widget-container {
+    height: 180px;
+  }
+  
+  .mobile-dashboard .chart-container {
+    height: 140px;
+  }
+}
+
+/* Portrait orientation adjustments */
+@media (orientation: portrait) and (max-width: 768px) {
+  .mobile-dashboard .mobile-widget-container {
+    height: 240px;
+  }
+  
+  .mobile-dashboard .chart-container {
+    height: 200px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .mobile-dashboard {
+    --border-color: #000000;
+    --text-color: #000000;
+    --bg-color: #ffffff;
+  }
+  
+  .mobile-dashboard .border {
+    border-color: var(--border-color);
+  }
+  
+  .mobile-dashboard .text-gray-500 {
+    color: var(--text-color);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-dashboard * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .mobile-dashboard {
+    --bg-primary: #1f2937;
+    --bg-secondary: #374151;
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --border-color: #4b5563;
+  }
+}
+
+/* Safe area insets for devices with notches */
+.mobile-dashboard {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Swipe gesture indicators */
+.swipe-indicator {
+  position: relative;
+}
+
+.swipe-indicator::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #6b7280, transparent);
+  border-radius: 1px;
+}
+
+/* Loading states for mobile */
+.mobile-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.mobile-loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e5e7eb;
+  border-top: 3px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Offline mode styles */
+.offline-mode {
+  filter: grayscale(0.3);
+  opacity: 0.9;
+}
+
+.offline-indicator {
+  position: fixed;
+  top: env(safe-area-inset-top, 0);
+  left: 0;
+  right: 0;
+  background: #f59e0b;
+  color: white;
+  text-align: center;
+  padding: 8px;
+  font-size: 14px;
+  z-index: 1000;
+}
+
+/* Pull-to-refresh styles */
+.pull-to-refresh {
+  position: relative;
+  overflow: hidden;
+}
+
+.pull-to-refresh-indicator {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.pull-to-refresh.pulling .pull-to-refresh-indicator {
+  transform: translateX(-50%) translateY(80px);
+}
+
+/* Chart responsiveness */
+.responsive-chart {
+  width: 100%;
+  height: auto;
+}
+
+.responsive-chart svg {
+  width: 100% !important;
+  height: auto !important;
+}
+
+/* Mobile-specific button styles */
+.mobile-button {
+  padding: 12px 16px;
+  font-size: 16px; /* Prevents zoom on iOS */
+  border-radius: 8px;
+  touch-action: manipulation;
+}
+
+.mobile-button:active {
+  transform: scale(0.95);
+}
+
+/* Input styles for mobile */
+.mobile-input {
+  font-size: 16px; /* Prevents zoom on iOS */
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+}
+
+.mobile-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: no-preference) {
+  .mobile-dashboard .animate-in {
+    animation: slideInUp 0.3s ease-out;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Focus styles for keyboard navigation */
+.mobile-dashboard *:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* High DPI display optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .mobile-dashboard .icon {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Landscape phone specific styles */
+@media (max-height: 500px) and (orientation: landscape) {
+  .mobile-dashboard .mobile-nav-bar {
+    padding: 8px 16px;
+  }
+  
+  .mobile-dashboard .mobile-widget-container {
+    height: 160px;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 320px) {
+  .mobile-dashboard {
+    font-size: 14px;
+  }
+  
+  .mobile-dashboard .mobile-nav-bar h1 {
+    font-size: 16px;
+  }
+  
+  .mobile-dashboard .mobile-widget-container {
+    margin: 8px;
+    padding: 12px;
+  }
+}

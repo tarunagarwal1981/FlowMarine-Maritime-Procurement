@@ -1,0 +1,100 @@
+config:
+  target: 'https://flowmarine.example.com'
+  phases:
+    - duration: 60
+      arrivalRate: 5
+      name: "Warm up"
+    - duration: 120
+      arrivalRate: 10
+      name: "Ramp up load"
+    - duration: 300
+      arrivalRate: 20
+      name: "Sustained load"
+  defaults:
+    headers:
+      Content-Type: 'application/json'
+
+scenarios:
+  - name: "Authentication Flow"
+    weight: 30
+    flow:
+      - post:
+          url: "/api/auth/login"
+          json:
+            email: "test@example.com"
+            password: "testpassword"
+          capture:
+            - json: "$.token"
+              as: "authToken"
+      - get:
+          url: "/api/auth/profile"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+
+  - name: "Requisition Management"
+    weight: 40
+    flow:
+      - post:
+          url: "/api/auth/login"
+          json:
+            email: "crew@example.com"
+            password: "testpassword"
+          capture:
+            - json: "$.token"
+              as: "authToken"
+      - get:
+          url: "/api/requisitions"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+      - post:
+          url: "/api/requisitions"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          json:
+            vesselId: "vessel-1"
+            urgencyLevel: "ROUTINE"
+            deliveryLocation: "Port of Hamburg"
+            items:
+              - itemId: "item-1"
+                quantity: 5
+                unitPrice: 100
+
+  - name: "Vendor Management"
+    weight: 20
+    flow:
+      - post:
+          url: "/api/auth/login"
+          json:
+            email: "procurement@example.com"
+            password: "testpassword"
+          capture:
+            - json: "$.token"
+              as: "authToken"
+      - get:
+          url: "/api/vendors"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+      - get:
+          url: "/api/rfqs"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+
+  - name: "Analytics Dashboard"
+    weight: 10
+    flow:
+      - post:
+          url: "/api/auth/login"
+          json:
+            email: "admin@example.com"
+            password: "testpassword"
+          capture:
+            - json: "$.token"
+              as: "authToken"
+      - get:
+          url: "/api/analytics/dashboard"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+      - get:
+          url: "/api/analytics/spending"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
