@@ -18,9 +18,7 @@ import {
   AlertCircle,
   FileText
 } from 'lucide-react';
-import { Button } from '../ui/Button';
-import { Card } from '../ui/card';
-import { Badge } from '../ui/Badge';
+import { Button, Card, Badge } from '../ui';
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { setSearchTerm, updateFilters, clearFilters } from '../../store/slices/requisitionSlice';
 import { Requisition } from '../../types/requisition';

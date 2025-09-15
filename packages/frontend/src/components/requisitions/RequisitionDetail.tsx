@@ -18,9 +18,7 @@ import {
   Paperclip,
   AlertCircle
 } from 'lucide-react';
-import { Button } from '../ui/Button';
-import { Card } from '../ui/card';
-import { Badge } from '../ui/Badge';
+import { Button, Card, Badge } from '../ui';
 import { Requisition } from '../../types/requisition';
 
 interface RequisitionDetailProps {
