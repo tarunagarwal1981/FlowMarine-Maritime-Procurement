@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { 
-  FileText, 
-  Download, 
-  Calendar, 
+import {
+  FileText,
+  Download,
+  Calendar,
   Filter,
   BarChart3,
   PieChart,
@@ -170,7 +170,7 @@ export const ReportsPage: React.FC = () => {
     }
   ];
 
-  const filteredReports = reports.filter(report => 
+  const filteredReports = reports.filter(report =>
     selectedCategory === 'all' || report.category === selectedCategory
   );
 
@@ -201,21 +201,21 @@ export const ReportsPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Reports</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-3xl font-semibold text-slate-800">Reports</h1>
+          <p className="text-slate-600 mt-2">
             Generate and manage procurement reports and analytics
           </p>
         </div>
         <div className="flex items-center space-x-3">
-          <Button variant="outline" className="flex items-center space-x-2">
+          <Button className="bg-white/80 backdrop-blur-sm border border-slate-200/60 text-slate-700 hover:bg-white hover:shadow-md hover:shadow-slate-200/50 transition-all duration-200 flex items-center space-x-2">
             <Settings className="h-4 w-4" />
             <span>Settings</span>
           </Button>
-          <Button className="flex items-center space-x-2">
+          <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/25 transition-all duration-200 flex items-center space-x-2">
             <Plus className="h-4 w-4" />
             <span>New Report</span>
           </Button>
@@ -280,21 +280,20 @@ export const ReportsPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Sidebar */}
         <div className="lg:col-span-1">
-          <Card className="p-6">
-            <h3 className="font-semibold text-lg mb-4">Categories</h3>
+          <Card className="p-6 bg-white/60 backdrop-blur-sm border border-slate-200/60">
+            <h3 className="font-semibold text-lg mb-6 text-slate-800">Categories</h3>
             <div className="space-y-2">
               {reportCategories.map((category) => (
                 <button
                   key={category.id}
                   onClick={() => setSelectedCategory(category.id)}
-                  className={`w-full flex items-center justify-between p-3 rounded-lg text-left transition-colors ${
-                    selectedCategory === category.id
-                      ? 'bg-blue-100 text-blue-900'
-                      : 'hover:bg-gray-100'
-                  }`}
+                  className={`w-full flex items-center justify-between p-3 rounded-lg text-left transition-all duration-200 ${selectedCategory === category.id
+                    ? 'bg-blue-100 text-blue-900 shadow-sm'
+                    : 'hover:bg-slate-50 text-slate-700'
+                    }`}
                 >
                   <span className="font-medium">{category.name}</span>
-                  <Badge variant="outline" size="sm">
+                  <Badge className={`${selectedCategory === category.id ? 'bg-blue-200 text-blue-800' : 'bg-slate-100 text-slate-600'} font-medium`}>
                     {category.count}
                   </Badge>
                 </button>
@@ -303,19 +302,19 @@ export const ReportsPage: React.FC = () => {
           </Card>
 
           {/* Recent Downloads */}
-          <Card className="p-6 mt-6">
-            <h3 className="font-semibold text-lg mb-4">Recent Downloads</h3>
+          <Card className="p-6 mt-6 bg-white/60 backdrop-blur-sm border border-slate-200/60">
+            <h3 className="font-semibold text-lg mb-6 text-slate-800">Recent Downloads</h3>
             <div className="space-y-3">
               {recentReports.map((report, index) => (
-                <div key={index} className="p-3 bg-gray-50 rounded-lg">
-                  <p className="font-medium text-sm text-gray-900">{report.name}</p>
-                  <div className="flex items-center justify-between mt-2 text-xs text-gray-600">
+                <div key={index} className="p-4 bg-slate-50/50 rounded-lg hover:bg-slate-50 transition-colors duration-200">
+                  <p className="font-semibold text-sm text-slate-800">{report.name}</p>
+                  <div className="flex items-center justify-between mt-2 text-xs text-slate-600 font-medium">
                     <span>{formatDate(report.generatedDate)}</span>
                     <span>{report.size}</span>
                   </div>
-                  <div className="flex items-center justify-between mt-1">
-                    <Badge variant="outline" size="sm">{report.format}</Badge>
-                    <span className="text-xs text-gray-500">{report.downloads} downloads</span>
+                  <div className="flex items-center justify-between mt-2">
+                    <Badge className="bg-blue-100 text-blue-800 font-medium">{report.format}</Badge>
+                    <span className="text-xs text-slate-500 font-medium">{report.downloads} downloads</span>
                   </div>
                 </div>
               ))}
@@ -326,13 +325,13 @@ export const ReportsPage: React.FC = () => {
         {/* Main Content */}
         <div className="lg:col-span-3">
           {/* Filters */}
-          <Card className="p-4 mb-6">
+          <Card className="p-5 mb-6 bg-white/60 backdrop-blur-sm border border-slate-200/60">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
               <div className="flex items-center space-x-3">
                 <select
                   value={dateRange}
                   onChange={(e) => setDateRange(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="px-4 py-2.5 bg-white/80 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all duration-200 text-sm font-medium text-slate-700"
                 >
                   <option value="last7days">Last 7 Days</option>
                   <option value="last30days">Last 30 Days</option>
@@ -340,13 +339,13 @@ export const ReportsPage: React.FC = () => {
                   <option value="last6months">Last 6 Months</option>
                   <option value="lastyear">Last Year</option>
                 </select>
-                <Button variant="outline" className="flex items-center space-x-2">
+                <Button className="bg-white/80 backdrop-blur-sm border border-slate-200/60 text-slate-700 hover:bg-white hover:shadow-md hover:shadow-slate-200/50 transition-all duration-200 flex items-center space-x-2">
                   <Filter className="h-4 w-4" />
                   <span>More Filters</span>
                 </Button>
               </div>
               <div className="flex items-center space-x-2">
-                <Button variant="outline" size="sm">
+                <Button className="bg-white/80 backdrop-blur-sm border border-slate-200/60 text-slate-700 hover:bg-white hover:shadow-md hover:shadow-slate-200/50 transition-all duration-200 p-2.5">
                   <RefreshCw className="h-4 w-4" />
                 </Button>
               </div>
@@ -356,11 +355,11 @@ export const ReportsPage: React.FC = () => {
           {/* Reports List */}
           <div className="space-y-4">
             {filteredReports.map((report) => (
-              <Card key={report.id} className="p-6 hover:shadow-lg transition-shadow">
+              <Card key={report.id} className="p-6 bg-white/60 backdrop-blur-sm border border-slate-200/60 hover:shadow-lg hover:shadow-slate-200/50 transition-all duration-300">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
-                    <div className="flex items-center space-x-3 mb-2">
-                      <h3 className="font-semibold text-lg text-gray-900">{report.name}</h3>
+                    <div className="flex items-center space-x-3 mb-3">
+                      <h3 className="font-semibold text-lg text-slate-800">{report.name}</h3>
                       <Badge className={getTypeColor(report.type)}>
                         {report.type}
                       </Badge>
@@ -368,43 +367,43 @@ export const ReportsPage: React.FC = () => {
                         {report.status}
                       </Badge>
                     </div>
-                    <p className="text-gray-600 mb-3">{report.description}</p>
-                    
+                    <p className="text-slate-600 mb-4 font-medium">{report.description}</p>
+
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                      <div>
-                        <span className="text-gray-500">Frequency:</span>
-                        <span className="ml-1 font-medium">{report.frequency}</span>
+                      <div className="bg-slate-50/50 p-3 rounded-lg">
+                        <span className="text-slate-500 font-medium">Frequency:</span>
+                        <span className="ml-1 font-semibold text-slate-800">{report.frequency}</span>
                       </div>
-                      <div>
-                        <span className="text-gray-500">Format:</span>
-                        <span className="ml-1 font-medium">{report.format}</span>
+                      <div className="bg-slate-50/50 p-3 rounded-lg">
+                        <span className="text-slate-500 font-medium">Format:</span>
+                        <span className="ml-1 font-semibold text-slate-800">{report.format}</span>
                       </div>
-                      <div>
-                        <span className="text-gray-500">Size:</span>
-                        <span className="ml-1 font-medium">{report.size}</span>
+                      <div className="bg-slate-50/50 p-3 rounded-lg">
+                        <span className="text-slate-500 font-medium">Size:</span>
+                        <span className="ml-1 font-semibold text-slate-800">{report.size}</span>
                       </div>
-                      <div>
-                        <span className="text-gray-500">Recipients:</span>
-                        <span className="ml-1 font-medium">{report.recipients.length}</span>
+                      <div className="bg-slate-50/50 p-3 rounded-lg">
+                        <span className="text-slate-500 font-medium">Recipients:</span>
+                        <span className="ml-1 font-semibold text-slate-800">{report.recipients.length}</span>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-                  <h4 className="font-medium text-sm text-gray-900 mb-2">Parameters</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm">
+                <div className="mb-5 p-4 bg-slate-50/50 rounded-lg border border-slate-100">
+                  <h4 className="font-semibold text-sm text-slate-800 mb-3">Parameters</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
                     {Object.entries(report.parameters).map(([key, value]) => (
-                      <div key={key}>
-                        <span className="text-gray-500 capitalize">{key.replace(/([A-Z])/g, ' $1')}:</span>
-                        <span className="ml-1 font-medium">{value}</span>
+                      <div key={key} className="bg-white/60 p-2 rounded">
+                        <span className="text-slate-500 capitalize font-medium">{key.replace(/([A-Z])/g, ' $1')}:</span>
+                        <span className="ml-1 font-semibold text-slate-800">{value}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                  <div className="flex items-center space-x-4 text-sm text-gray-600">
+                <div className="flex items-center justify-between pt-5 border-t border-slate-200">
+                  <div className="flex items-center space-x-4 text-sm text-slate-600 font-medium">
                     <div className="flex items-center">
                       <Calendar className="h-4 w-4 mr-1" />
                       <span>Last: {formatDate(report.lastGenerated)}</span>
@@ -417,16 +416,16 @@ export const ReportsPage: React.FC = () => {
                     )}
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Button variant="outline" size="sm">
+                    <Button className="bg-white/80 border border-slate-200 text-slate-700 hover:bg-white hover:shadow-md hover:shadow-slate-200/50 transition-all duration-200 p-2">
                       <Eye className="h-4 w-4" />
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button className="bg-white/80 border border-slate-200 text-slate-700 hover:bg-white hover:shadow-md hover:shadow-slate-200/50 transition-all duration-200 p-2">
                       <Download className="h-4 w-4" />
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button className="bg-white/80 border border-slate-200 text-slate-700 hover:bg-white hover:shadow-md hover:shadow-slate-200/50 transition-all duration-200 p-2">
                       <Share className="h-4 w-4" />
                     </Button>
-                    <Button size="sm">
+                    <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/25 transition-all duration-200 px-4 py-2">
                       Generate Now
                     </Button>
                   </div>
@@ -438,18 +437,18 @@ export const ReportsPage: React.FC = () => {
       </div>
 
       {/* Quick Actions */}
-      <Card className="p-6">
-        <h3 className="font-semibold text-lg mb-4">Quick Actions</h3>
+      <Card className="p-6 bg-white/60 backdrop-blur-sm border border-slate-200/60">
+        <h3 className="font-semibold text-lg mb-6 text-slate-800">Quick Actions</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Button variant="outline" className="flex items-center justify-center space-x-2 p-4">
+          <Button className="bg-white/80 backdrop-blur-sm border border-slate-200/60 text-slate-700 hover:bg-white hover:shadow-md hover:shadow-slate-200/50 transition-all duration-200 flex items-center justify-center space-x-2 p-4">
             <BarChart3 className="h-5 w-5" />
             <span>Generate Spend Analysis</span>
           </Button>
-          <Button variant="outline" className="flex items-center justify-center space-x-2 p-4">
+          <Button className="bg-white/80 backdrop-blur-sm border border-slate-200/60 text-slate-700 hover:bg-white hover:shadow-md hover:shadow-slate-200/50 transition-all duration-200 flex items-center justify-center space-x-2 p-4">
             <PieChart className="h-5 w-5" />
             <span>Vendor Performance Report</span>
           </Button>
-          <Button variant="outline" className="flex items-center justify-center space-x-2 p-4">
+          <Button className="bg-white/80 backdrop-blur-sm border border-slate-200/60 text-slate-700 hover:bg-white hover:shadow-md hover:shadow-slate-200/50 transition-all duration-200 flex items-center justify-center space-x-2 p-4">
             <TrendingUp className="h-5 w-5" />
             <span>Cost Savings Summary</span>
           </Button>

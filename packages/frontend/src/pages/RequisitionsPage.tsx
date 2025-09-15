@@ -74,5 +74,5 @@ export const RequisitionsPage: React.FC = () => {
     }
   };
 
-  return <div className="min-h-screen bg-gray-50">{renderContent()}</div>;
+  return <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">{renderContent()}</div>;
 };

@@ -1,7 +1,6 @@
 import React from 'react';
 import { 
   Ship, 
-  Package, 
   DollarSign, 
   Clock, 
   TrendingUp, 
@@ -157,7 +156,7 @@ export const DashboardPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -209,7 +208,7 @@ export const DashboardPage: React.FC = () => {
           <Card className="p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold">Recent Requisitions</h2>
-              <Badge variant="outline">24 Active</Badge>
+              <Badge className="bg-blue-100 text-blue-800 font-medium">24 Active</Badge>
             </div>
             <div className="space-y-4">
               {recentRequisitions.map((req) => (
@@ -300,7 +299,7 @@ export const DashboardPage: React.FC = () => {
                   <td className="py-3 px-2 text-gray-900">{vessel.location}</td>
                   <td className="py-3 px-2 text-gray-900">{vessel.nextMaintenance}</td>
                   <td className="py-3 px-2">
-                    <Badge variant="outline">{vessel.activeRequisitions}</Badge>
+                    <Badge className="bg-slate-100 text-slate-700 font-medium">{vessel.activeRequisitions}</Badge>
                   </td>
                 </tr>
               ))}

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { 
   Search, 
-  Filter, 
   Grid, 
   List, 
   Star,
@@ -205,21 +204,21 @@ export const CatalogPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Parts Catalog</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-3xl font-semibold text-slate-800">Parts Catalog</h1>
+          <p className="text-slate-600 mt-2">
             Browse and order maritime parts and equipment
           </p>
         </div>
         <div className="flex items-center space-x-3">
-          <Button variant="outline" className="flex items-center space-x-2">
+          <Button className="bg-white/80 backdrop-blur-sm border border-slate-200/60 text-slate-700 hover:bg-white hover:shadow-md hover:shadow-slate-200/50 transition-all duration-200 flex items-center space-x-2">
             <Heart className="h-4 w-4" />
             <span>Favorites</span>
           </Button>
-          <Button variant="outline" className="flex items-center space-x-2">
+          <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/25 transition-all duration-200 flex items-center space-x-2">
             <ShoppingCart className="h-4 w-4" />
             <span>Cart (3)</span>
           </Button>
@@ -229,8 +228,8 @@ export const CatalogPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Sidebar */}
         <div className="lg:col-span-1">
-          <Card className="p-6">
-            <h3 className="font-semibold text-lg mb-4">Categories</h3>
+          <Card className="p-6 bg-white/60 backdrop-blur-sm border border-slate-200/60">
+            <h3 className="font-semibold text-lg mb-6 text-slate-800">Categories</h3>
             <div className="space-y-2">
               {categories.map((category) => {
                 const IconComponent = category.icon;
@@ -238,17 +237,19 @@ export const CatalogPage: React.FC = () => {
                   <button
                     key={category.id}
                     onClick={() => setSelectedCategory(category.id)}
-                    className={`w-full flex items-center justify-between p-3 rounded-lg text-left transition-colors ${
+                    className={`w-full flex items-center justify-between p-3 rounded-lg text-left transition-all duration-200 ${
                       selectedCategory === category.id
-                        ? 'bg-blue-100 text-blue-900'
-                        : 'hover:bg-gray-100'
+                        ? 'bg-blue-100 text-blue-900 shadow-sm'
+                        : 'hover:bg-slate-50 text-slate-700'
                     }`}
                   >
                     <div className="flex items-center space-x-3">
-                      <IconComponent className="h-5 w-5" />
+                      <div className={`p-1.5 rounded-lg ${selectedCategory === category.id ? 'bg-blue-200' : 'bg-slate-100'}`}>
+                        <IconComponent className="h-4 w-4" />
+                      </div>
                       <span className="font-medium">{category.name}</span>
                     </div>
-                    <Badge variant="outline" size="sm">
+                    <Badge className={`${selectedCategory === category.id ? 'bg-blue-200 text-blue-800' : 'bg-slate-100 text-slate-600'} font-medium`}>
                       {category.count}
                     </Badge>
                   </button>
@@ -258,54 +259,54 @@ export const CatalogPage: React.FC = () => {
           </Card>
 
           {/* Filters */}
-          <Card className="p-6 mt-6">
-            <h3 className="font-semibold text-lg mb-4">Filters</h3>
-            <div className="space-y-4">
+          <Card className="p-6 mt-6 bg-white/60 backdrop-blur-sm border border-slate-200/60">
+            <h3 className="font-semibold text-lg mb-6 text-slate-800">Filters</h3>
+            <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-slate-700 mb-3">
                   Price Range
                 </label>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-3">
                   <input
                     type="number"
                     placeholder="Min"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                    className="w-full px-3 py-2.5 bg-white/80 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all duration-200"
                   />
-                  <span>-</span>
+                  <span className="text-slate-500">-</span>
                   <input
                     type="number"
                     placeholder="Max"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                    className="w-full px-3 py-2.5 bg-white/80 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all duration-200"
                   />
                 </div>
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-slate-700 mb-3">
                   Brand
                 </label>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {['Shell', 'Caterpillar', 'Furuno', 'Survitec'].map((brand) => (
-                    <label key={brand} className="flex items-center">
-                      <input type="checkbox" className="mr-2" />
-                      <span className="text-sm">{brand}</span>
+                    <label key={brand} className="flex items-center group cursor-pointer">
+                      <input type="checkbox" className="mr-3 rounded border-slate-300 text-blue-600 focus:ring-blue-500/20" />
+                      <span className="text-sm text-slate-700 group-hover:text-slate-900 transition-colors">{brand}</span>
                     </label>
                   ))}
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-slate-700 mb-3">
                   Availability
                 </label>
-                <div className="space-y-2">
-                  <label className="flex items-center">
-                    <input type="checkbox" className="mr-2" defaultChecked />
-                    <span className="text-sm">In Stock</span>
+                <div className="space-y-3">
+                  <label className="flex items-center group cursor-pointer">
+                    <input type="checkbox" className="mr-3 rounded border-slate-300 text-blue-600 focus:ring-blue-500/20" defaultChecked />
+                    <span className="text-sm text-slate-700 group-hover:text-slate-900 transition-colors">In Stock</span>
                   </label>
-                  <label className="flex items-center">
-                    <input type="checkbox" className="mr-2" />
-                    <span className="text-sm">Include Out of Stock</span>
+                  <label className="flex items-center group cursor-pointer">
+                    <input type="checkbox" className="mr-3 rounded border-slate-300 text-blue-600 focus:ring-blue-500/20" />
+                    <span className="text-sm text-slate-700 group-hover:text-slate-900 transition-colors">Include Out of Stock</span>
                   </label>
                 </div>
               </div>
@@ -316,17 +317,17 @@ export const CatalogPage: React.FC = () => {
         {/* Main Content */}
         <div className="lg:col-span-3">
           {/* Search and Controls */}
-          <Card className="p-4 mb-6">
+          <Card className="p-5 mb-6 bg-white/60 backdrop-blur-sm border border-slate-200/60">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
               <div className="flex-1 max-w-md">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
                   <input
                     type="text"
                     placeholder="Search parts, brands, or item codes..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full pl-11 pr-4 py-3 bg-white/80 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all duration-200"
                   />
                 </div>
               </div>
@@ -335,7 +336,7 @@ export const CatalogPage: React.FC = () => {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="px-4 py-3 bg-white/80 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all duration-200 text-sm font-medium text-slate-700"
                 >
                   <option value="name">Sort by Name</option>
                   <option value="price-low">Price: Low to High</option>
@@ -343,16 +344,16 @@ export const CatalogPage: React.FC = () => {
                   <option value="rating">Highest Rated</option>
                 </select>
                 
-                <div className="flex items-center border border-gray-300 rounded-md">
+                <div className="flex items-center bg-white/80 border border-slate-200 rounded-lg overflow-hidden">
                   <button
                     onClick={() => setViewMode('grid')}
-                    className={`p-2 ${viewMode === 'grid' ? 'bg-blue-100 text-blue-600' : 'text-gray-400'}`}
+                    className={`p-2.5 transition-all duration-200 ${viewMode === 'grid' ? 'bg-blue-100 text-blue-600' : 'text-slate-400 hover:text-slate-600'}`}
                   >
                     <Grid className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => setViewMode('list')}
-                    className={`p-2 ${viewMode === 'list' ? 'bg-blue-100 text-blue-600' : 'text-gray-400'}`}
+                    className={`p-2.5 transition-all duration-200 ${viewMode === 'list' ? 'bg-blue-100 text-blue-600' : 'text-slate-400 hover:text-slate-600'}`}
                   >
                     <List className="h-4 w-4" />
                   </button>
@@ -362,8 +363,8 @@ export const CatalogPage: React.FC = () => {
           </Card>
 
           {/* Results */}
-          <div className="mb-4">
-            <p className="text-gray-600">
+          <div className="mb-6">
+            <p className="text-slate-600 font-medium">
               Showing {sortedItems.length} of {catalogItems.length} items
             </p>
           </div>
@@ -372,30 +373,30 @@ export const CatalogPage: React.FC = () => {
           {viewMode === 'grid' ? (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {sortedItems.map((item) => (
-                <Card key={item.id} className="p-6 hover:shadow-lg transition-shadow">
-                  <div className="aspect-square bg-gray-100 rounded-lg mb-4 flex items-center justify-center">
-                    <Package className="h-16 w-16 text-gray-400" />
+                <Card key={item.id} className="p-6 bg-white/60 backdrop-blur-sm border border-slate-200/60 hover:shadow-lg hover:shadow-slate-200/50 transition-all duration-300 group">
+                  <div className="aspect-square bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl mb-5 flex items-center justify-center group-hover:from-slate-100 group-hover:to-slate-150 transition-all duration-300">
+                    <Package className="h-16 w-16 text-slate-400 group-hover:text-slate-500 transition-colors duration-300" />
                   </div>
                   
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     <div>
-                      <h3 className="font-semibold text-lg text-gray-900">{item.name}</h3>
-                      <p className="text-sm text-gray-600">{item.id} • {item.brand}</p>
+                      <h3 className="font-semibold text-lg text-slate-800 group-hover:text-slate-900 transition-colors">{item.name}</h3>
+                      <p className="text-sm text-slate-600 font-medium">{item.id} • {item.brand}</p>
                     </div>
                     
                     <div className="flex items-center space-x-2">
                       <div className="flex items-center">
                         {renderStars(item.rating)}
                       </div>
-                      <span className="text-sm text-gray-600">({item.reviews})</span>
+                      <span className="text-sm text-slate-600 font-medium">({item.reviews})</span>
                     </div>
                     
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-2xl font-bold text-gray-900">
+                        <p className="text-2xl font-bold text-slate-800">
                           ${item.price}
                         </p>
-                        <p className="text-sm text-gray-500">per {item.unit}</p>
+                        <p className="text-sm text-slate-500 font-medium">per {item.unit}</p>
                       </div>
                       <Badge className={getStockColor(item.stockLevel)}>
                         {item.stockLevel}
@@ -404,13 +405,13 @@ export const CatalogPage: React.FC = () => {
                     
                     <div className="flex items-center space-x-2">
                       <Button 
-                        className="flex-1" 
+                        className={`flex-1 ${item.inStock ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/25' : 'bg-slate-300 text-slate-500 cursor-not-allowed'} transition-all duration-200`}
                         disabled={!item.inStock}
                       >
                         <ShoppingCart className="h-4 w-4 mr-2" />
                         Add to Cart
                       </Button>
-                      <Button variant="outline" size="sm">
+                      <Button className="bg-white/80 border border-slate-200 text-slate-700 hover:bg-white hover:shadow-md hover:shadow-slate-200/50 transition-all duration-200 p-2.5">
                         <Eye className="h-4 w-4" />
                       </Button>
                     </div>

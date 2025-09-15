@@ -167,21 +167,21 @@ export const QuotesPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Quotes</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-3xl font-semibold text-slate-800">Quotes</h1>
+          <p className="text-slate-600 mt-2">
             Manage vendor quotes and procurement proposals
           </p>
         </div>
         <div className="flex items-center space-x-3">
-          <Button variant="outline" className="flex items-center space-x-2">
+          <Button className="bg-white/80 backdrop-blur-sm border border-slate-200/60 text-slate-700 hover:bg-white hover:shadow-md hover:shadow-slate-200/50 transition-all duration-200 flex items-center space-x-2">
             <Download className="h-4 w-4" />
             <span>Export</span>
           </Button>
-          <Button className="flex items-center space-x-2">
+          <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/25 transition-all duration-200 flex items-center space-x-2">
             <Plus className="h-4 w-4" />
             <span>Request Quote</span>
           </Button>
@@ -256,17 +256,17 @@ export const QuotesPage: React.FC = () => {
       </div>
 
       {/* Tabs and Search */}
-      <Card className="p-4">
+      <Card className="p-5 bg-white/60 backdrop-blur-sm border border-slate-200/60">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
           <div className="flex items-center space-x-1">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setSelectedTab(tab.id)}
-                className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
+                className={`px-4 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 ${
                   selectedTab === tab.id
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    ? 'bg-blue-100 text-blue-700 shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
                 {tab.label} ({tab.count})
@@ -276,21 +276,21 @@ export const QuotesPage: React.FC = () => {
 
           <div className="flex items-center space-x-3">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input
                 type="text"
                 placeholder="Search quotes..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="pl-11 pr-4 py-2.5 bg-white/80 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all duration-200"
               />
             </div>
-            <Button variant="outline" className="flex items-center space-x-2">
+            <Button className="bg-white/80 backdrop-blur-sm border border-slate-200/60 text-slate-700 hover:bg-white hover:shadow-md hover:shadow-slate-200/50 transition-all duration-200 flex items-center space-x-2">
               <Filter className="h-4 w-4" />
               <span>Filters</span>
             </Button>
             {selectedQuotes.length > 0 && (
-              <Button variant="outline" className="flex items-center space-x-2">
+              <Button className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/25 transition-all duration-200 flex items-center space-x-2">
                 <GitCompare className="h-4 w-4" />
                 <span>Compare ({selectedQuotes.length})</span>
               </Button>
@@ -306,7 +306,7 @@ export const QuotesPage: React.FC = () => {
           const isExpiring = isExpiringSoon(quote.validUntil);
           
           return (
-            <Card key={quote.id} className="p-6 hover:shadow-lg transition-shadow">
+            <Card key={quote.id} className="p-6 bg-white/60 backdrop-blur-sm border border-slate-200/60 hover:shadow-lg hover:shadow-slate-200/50 transition-all duration-300">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-start space-x-4">
                   <input
@@ -316,15 +316,15 @@ export const QuotesPage: React.FC = () => {
                     className="mt-1"
                   />
                   <div>
-                    <div className="flex items-center space-x-3 mb-2">
-                      <h3 className="font-semibold text-lg text-gray-900">{quote.title}</h3>
+                    <div className="flex items-center space-x-3 mb-3">
+                      <h3 className="font-semibold text-lg text-slate-800">{quote.title}</h3>
                       {isExpiring && (
-                        <Badge className="bg-orange-100 text-orange-800">
+                        <Badge className="bg-orange-100 text-orange-800 font-medium">
                           Expires Soon
                         </Badge>
                       )}
                     </div>
-                    <div className="flex items-center space-x-4 text-sm text-gray-600 mb-3">
+                    <div className="flex items-center space-x-4 text-sm text-slate-600 mb-4 font-medium">
                       <span>{quote.id}</span>
                       <span>•</span>
                       <span>Req: {quote.requisitionId}</span>
@@ -335,21 +335,21 @@ export const QuotesPage: React.FC = () => {
                       </span>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                      <div>
-                        <span className="text-gray-500">Items:</span>
-                        <span className="ml-1 font-medium">{quote.itemCount}</span>
+                      <div className="bg-slate-50/50 p-3 rounded-lg">
+                        <span className="text-slate-500 font-medium">Items:</span>
+                        <span className="ml-1 font-semibold text-slate-800">{quote.itemCount}</span>
                       </div>
-                      <div>
-                        <span className="text-gray-500">Payment:</span>
-                        <span className="ml-1 font-medium">{quote.paymentTerms}</span>
+                      <div className="bg-slate-50/50 p-3 rounded-lg">
+                        <span className="text-slate-500 font-medium">Payment:</span>
+                        <span className="ml-1 font-semibold text-slate-800">{quote.paymentTerms}</span>
                       </div>
-                      <div>
-                        <span className="text-gray-500">Delivery:</span>
-                        <span className="ml-1 font-medium">{quote.deliveryTime}</span>
+                      <div className="bg-slate-50/50 p-3 rounded-lg">
+                        <span className="text-slate-500 font-medium">Delivery:</span>
+                        <span className="ml-1 font-semibold text-slate-800">{quote.deliveryTime}</span>
                       </div>
-                      <div>
-                        <span className="text-gray-500">Response:</span>
-                        <span className="ml-1 font-medium">{quote.responseTime}</span>
+                      <div className="bg-slate-50/50 p-3 rounded-lg">
+                        <span className="text-slate-500 font-medium">Response:</span>
+                        <span className="ml-1 font-semibold text-slate-800">{quote.responseTime}</span>
                       </div>
                     </div>
                   </div>
@@ -362,18 +362,18 @@ export const QuotesPage: React.FC = () => {
                       {statusConfig[quote.status as keyof typeof statusConfig].label}
                     </Badge>
                   </div>
-                  <div className="mb-2">
-                    <p className="text-2xl font-bold text-gray-900">
+                  <div className="mb-3">
+                    <p className="text-2xl font-bold text-slate-800">
                       ${quote.totalAmount.toLocaleString()}
                     </p>
                     {quote.discount > 0 && (
-                      <p className="text-sm text-green-600">
+                      <p className="text-sm text-emerald-600 font-semibold">
                         {quote.discount}% discount applied
                       </p>
                     )}
                   </div>
-                  <div className="text-sm text-gray-500">
-                    <div className="flex items-center">
+                  <div className="text-sm text-slate-500">
+                    <div className="flex items-center font-medium">
                       <Calendar className="h-4 w-4 mr-1" />
                       Valid until {formatDate(quote.validUntil)}
                     </div>
@@ -382,30 +382,30 @@ export const QuotesPage: React.FC = () => {
               </div>
 
               {quote.notes && (
-                <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-                  <p className="text-sm text-gray-700">{quote.notes}</p>
+                <div className="mb-5 p-4 bg-slate-50/50 rounded-lg border border-slate-100">
+                  <p className="text-sm text-slate-700 font-medium">{quote.notes}</p>
                 </div>
               )}
 
-              <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                <div className="flex items-center space-x-4 text-sm text-gray-600">
+              <div className="flex items-center justify-between pt-5 border-t border-slate-200">
+                <div className="flex items-center space-x-4 text-sm text-slate-600 font-medium">
                   <span>Submitted: {formatDate(quote.submittedDate)}</span>
                   <span>•</span>
                   <span>Vendor Rating: ⭐ {quote.vendor_rating}</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Button variant="outline" size="sm">
+                  <Button className="bg-white/80 border border-slate-200 text-slate-700 hover:bg-white hover:shadow-md hover:shadow-slate-200/50 transition-all duration-200 p-2">
                     <Eye className="h-4 w-4" />
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button className="bg-white/80 border border-slate-200 text-slate-700 hover:bg-white hover:shadow-md hover:shadow-slate-200/50 transition-all duration-200 p-2">
                     <Download className="h-4 w-4" />
                   </Button>
                   {quote.status === 'pending' && (
                     <>
-                      <Button size="sm" className="bg-green-600 hover:bg-green-700">
+                      <Button className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/25 transition-all duration-200 px-4 py-2">
                         Approve
                       </Button>
-                      <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
+                      <Button className="bg-white/80 border border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 transition-all duration-200 px-4 py-2">
                         Reject
                       </Button>
                     </>
