@@ -1,6 +1,6 @@
 [build]
   base = "packages/frontend"
-  publish = "packages/frontend/dist"
+  publish = "dist"
   command = "npm run build"
 
 [build.environment]
