@@ -157,16 +157,16 @@ export const DashboardPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-3xl font-semibold text-slate-800">Dashboard</h1>
+          <p className="text-slate-600 mt-2">
             Maritime procurement overview and fleet management
           </p>
         </div>
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-slate-500 bg-white/60 backdrop-blur-sm px-3 py-2 rounded-lg border border-slate-200/60">
           Last updated: {new Date().toLocaleString()}
         </div>
       </div>
@@ -176,25 +176,25 @@ export const DashboardPage: React.FC = () => {
         {kpiData.map((kpi, index) => {
           const IconComponent = kpi.icon;
           return (
-            <Card key={index} className="p-6">
+            <Card key={index} className="p-6 hover:shadow-lg hover:shadow-slate-200/50 transition-all duration-300">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">{kpi.title}</p>
-                  <p className="text-2xl font-bold text-gray-900 mt-1">{kpi.value}</p>
-                  <div className="flex items-center mt-2">
+                  <p className="text-sm font-medium text-slate-600">{kpi.title}</p>
+                  <p className="text-2xl font-semibold text-slate-800 mt-2">{kpi.value}</p>
+                  <div className="flex items-center mt-3">
                     {kpi.trend === 'up' ? (
-                      <TrendingUp className="h-4 w-4 text-green-600 mr-1" />
+                      <TrendingUp className="h-4 w-4 text-emerald-600 mr-1" />
                     ) : (
-                      <TrendingDown className="h-4 w-4 text-red-600 mr-1" />
+                      <TrendingDown className="h-4 w-4 text-red-500 mr-1" />
                     )}
                     <span className={`text-sm font-medium ${
-                      kpi.trend === 'up' ? 'text-green-600' : 'text-red-600'
+                      kpi.trend === 'up' ? 'text-emerald-600' : 'text-red-500'
                     }`}>
                       {kpi.change}
                     </span>
                   </div>
                 </div>
-                <div className={`p-3 rounded-lg bg-${kpi.color}-100`}>
+                <div className={`p-3 rounded-xl bg-gradient-to-br from-${kpi.color}-50 to-${kpi.color}-100 shadow-sm`}>
                   <IconComponent className={`h-6 w-6 text-${kpi.color}-600`} />
                 </div>
               </div>

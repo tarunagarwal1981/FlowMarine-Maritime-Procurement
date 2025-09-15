@@ -179,33 +179,33 @@ export const RequisitionsList: React.FC<RequisitionsListProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Requisitions</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-3xl font-semibold text-slate-800">Requisitions</h1>
+          <p className="text-slate-600 mt-2">
             Manage procurement requests for your fleet
           </p>
         </div>
-        <Button onClick={onCreateNew} className="flex items-center space-x-2">
+        <Button onClick={onCreateNew} className="flex items-center space-x-2 shadow-lg shadow-blue-200/50">
           <Plus className="h-4 w-4" />
           <span>New Requisition</span>
         </Button>
       </div>
 
       {/* Search and Filters */}
-      <Card className="p-4">
+      <Card className="p-6">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
           <div className="flex-1 max-w-md">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input
                 type="text"
                 placeholder="Search requisitions..."
                 value={searchTerm}
                 onChange={(e) => dispatch(setSearchTerm(e.target.value))}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200"
               />
             </div>
           </div>

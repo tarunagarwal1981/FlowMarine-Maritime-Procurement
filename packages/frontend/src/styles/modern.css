@@ -1,0 +1,240 @@
+/* Modern UI Enhancements */
+
+/* Global input styling */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+input[type="search"],
+textarea,
+select {
+  @apply border-slate-200 rounded-xl bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200;
+}
+
+/* Enhanced shadows */
+.shadow-modern {
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+.shadow-modern-lg {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+/* Glassmorphism effects */
+.glass {
+  @apply bg-white/70 backdrop-blur-md border border-white/20;
+}
+
+.glass-dark {
+  @apply bg-slate-900/70 backdrop-blur-md border border-slate-700/20;
+}
+
+/* Modern gradients */
+.gradient-primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+}
+
+.gradient-secondary {
+  background: linear-gradient(135deg, #64748b 0%, #334155 100%);
+}
+
+.gradient-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.gradient-warning {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.gradient-danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+/* Smooth transitions */
+.transition-modern {
+  @apply transition-all duration-300 ease-out;
+}
+
+/* Modern hover effects */
+.hover-lift {
+  @apply transition-transform duration-200 hover:-translate-y-1;
+}
+
+.hover-glow {
+  @apply transition-shadow duration-300 hover:shadow-lg hover:shadow-blue-200/50;
+}
+
+/* Custom scrollbar */
+.scrollbar-modern {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(203 213 225) transparent;
+}
+
+.scrollbar-modern::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-modern::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-modern::-webkit-scrollbar-thumb {
+  background-color: rgb(203 213 225);
+  border-radius: 3px;
+}
+
+.scrollbar-modern::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(148 163 184);
+}
+
+/* Modern focus states */
+.focus-modern {
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white;
+}
+
+/* Subtle animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.3s ease-out;
+}
+
+/* Modern card hover effects */
+.card-modern {
+  @apply bg-white/70 backdrop-blur-sm rounded-2xl border border-slate-200/60 shadow-sm transition-all duration-300;
+}
+
+.card-modern:hover {
+  @apply shadow-lg shadow-slate-200/50 border-slate-300/60 -translate-y-1;
+}
+
+/* Status indicators with modern styling */
+.status-dot {
+  @apply w-2 h-2 rounded-full;
+}
+
+.status-dot.active {
+  @apply bg-emerald-500 shadow-sm shadow-emerald-200;
+}
+
+.status-dot.inactive {
+  @apply bg-slate-400 shadow-sm shadow-slate-200;
+}
+
+.status-dot.warning {
+  @apply bg-amber-500 shadow-sm shadow-amber-200;
+}
+
+.status-dot.error {
+  @apply bg-red-500 shadow-sm shadow-red-200;
+}
+
+/* Modern table styling */
+.table-modern {
+  @apply w-full border-separate border-spacing-0;
+}
+
+.table-modern th {
+  @apply bg-slate-50/80 backdrop-blur-sm text-slate-600 font-medium text-sm py-3 px-4 text-left first:rounded-tl-xl last:rounded-tr-xl border-b border-slate-200/60;
+}
+
+.table-modern td {
+  @apply py-3 px-4 border-b border-slate-100/60 text-slate-700;
+}
+
+.table-modern tbody tr:hover {
+  @apply bg-slate-50/50;
+}
+
+.table-modern tbody tr:last-child td:first-child {
+  @apply rounded-bl-xl;
+}
+
+.table-modern tbody tr:last-child td:last-child {
+  @apply rounded-br-xl;
+}
+
+/* Modern form styling */
+.form-modern .form-group {
+  @apply space-y-2;
+}
+
+.form-modern label {
+  @apply text-sm font-medium text-slate-700;
+}
+
+.form-modern .form-input {
+  @apply w-full px-4 py-2.5 border border-slate-200 rounded-xl bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200;
+}
+
+.form-modern .form-select {
+  @apply w-full px-4 py-2.5 border border-slate-200 rounded-xl bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200;
+}
+
+.form-modern .form-textarea {
+  @apply w-full px-4 py-3 border border-slate-200 rounded-xl bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 resize-none;
+}
+
+/* Modern progress bars */
+.progress-modern {
+  @apply w-full bg-slate-200 rounded-full h-2 overflow-hidden;
+}
+
+.progress-modern .progress-bar {
+  @apply h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all duration-500;
+}
+
+/* Modern loading states */
+.loading-skeleton {
+  @apply animate-pulse bg-slate-200 rounded-xl;
+}
+
+.loading-spinner {
+  @apply animate-spin rounded-full border-2 border-slate-200 border-t-blue-600;
+}
+
+/* Modern notification styles */
+.notification-modern {
+  @apply bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-2xl shadow-lg shadow-slate-200/50 p-4;
+}
+
+.notification-modern.success {
+  @apply border-emerald-200/60 bg-emerald-50/90;
+}
+
+.notification-modern.warning {
+  @apply border-amber-200/60 bg-amber-50/90;
+}
+
+.notification-modern.error {
+  @apply border-red-200/60 bg-red-50/90;
+}
+
+.notification-modern.info {
+  @apply border-blue-200/60 bg-blue-50/90;
+}

@@ -11,11 +11,11 @@ export const Card: React.FC<CardProps> = ({
   children,
   ...props
 }) => {
-  const baseClasses = 'bg-white rounded-lg border shadow-sm';
+  const baseClasses = 'bg-white/70 backdrop-blur-sm rounded-2xl border border-slate-200/60 shadow-sm';
   
   const variants = {
     default: '',
-    interactive: 'hover:shadow-md transition-shadow cursor-pointer'
+    interactive: 'hover:shadow-lg hover:shadow-slate-200/50 hover:border-slate-300/60 transition-all duration-300 cursor-pointer'
   };
 
   return (
@@ -37,7 +37,7 @@ export const CardHeader: React.FC<CardHeaderProps> = ({
 }) => {
   return (
     <div
-      className={cn('px-6 py-4 border-b', className)}
+      className={cn('px-6 py-5 border-b border-slate-200/60', className)}
       {...props}
     >
       {children}
@@ -54,7 +54,7 @@ export const CardContent: React.FC<CardContentProps> = ({
 }) => {
   return (
     <div
-      className={cn('px-6 py-4', className)}
+      className={cn('px-6 py-5', className)}
       {...props}
     >
       {children}
@@ -71,7 +71,7 @@ export const CardFooter: React.FC<CardFooterProps> = ({
 }) => {
   return (
     <div
-      className={cn('px-6 py-4 border-t', className)}
+      className={cn('px-6 py-5 border-t border-slate-200/60', className)}
       {...props}
     >
       {children}
